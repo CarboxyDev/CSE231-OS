@@ -12,6 +12,6 @@
 	global _start
 
 _start:
-	mov eax,1         ; 1 is the exit syscall number
+	mov eax,1					; 1 is the exit syscall number
 	mov ebx,5					; is the status value to return
 	int 0x80					; executes sys call
