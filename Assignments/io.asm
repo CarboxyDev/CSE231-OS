@@ -6,19 +6,11 @@
 ; Ouput: number, string
 ;
 
-section .data
-    promptNumber db "Input number:"
-    promptString db "Input string:"
-    outputNumber db "Your chosen number:"
-    outputString db "Your chosen string:"
-
-section .bss
-    string resb 64
-    number resb 16
+    section .data
+msg:    db "Input number:",0x0a, 0
 
 
-
-section .text
+    section .text
     global main
     extern printf
     extern scanf
