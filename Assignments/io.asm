@@ -7,7 +7,7 @@
 ;
 
     section .data
-    promptNumber db "Input number:"
+promptNumber: db "Input number:", 0x0a, 0
 
 
     section .text
