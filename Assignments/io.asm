@@ -28,16 +28,40 @@ section .text
 
 _start:
     
+    ; Ask user for number
     lea rdi, [promptNumber]
     call printf
+
+    ; scanf() / input the number
     lea rdi, [inputNumber]
     mov rsi, number
     call scanf
+
+    ; Ask user for string
+    lea rdi, [promptString]
+    call printf
+
+    ; scanf() / input the string
+    lea rdi, [inputString]
+    mov rsi, string
+    call scanf
+
+
+
+
+    ; printf() / output the number
     lea rdi, [printNumber]
     mov rsi, [number]
     call printf
-    
 
+    ; printf() / output the string
+    lea rdi, [printString]
+    mov rsi, [string]
+    call printf
+
+
+        
+    ; Exit the program safely (Using C exit function)
     call exit
     ret
 
