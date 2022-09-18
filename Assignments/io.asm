@@ -56,8 +56,8 @@ _start:
     call printf
 
     ; printf() / output the string
-    ;lea rdi, [printString]
-    ;mov rsi, [string]
+    lea rdi, [printString]
+    mov rsi, [string]
     ;call printf
 
 
