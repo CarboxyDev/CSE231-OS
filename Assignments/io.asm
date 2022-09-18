@@ -63,6 +63,7 @@ _start:
     lea rdi, [printString]
     mov rsi, [string]
     xor rax, rax
+    add rsp, 8
     call printf
 
 
