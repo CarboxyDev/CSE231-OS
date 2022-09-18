@@ -23,5 +23,6 @@ _start:
     call printf
     xor eax, eax
     pop rbp
+    call exit
     ret
 
