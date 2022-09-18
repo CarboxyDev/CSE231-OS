@@ -1,5 +1,5 @@
 ASM=yasm
-LINKER=ld
+LINKER=gcc
 
 
 all: io.o

@@ -19,11 +19,11 @@ section .bss
 
 
 section .text
-    global _start
+    global main
     extern printf
     extern scanf
 
-_start:
+main:
     push rbp
     mov rbp, rsp
     lea rdi, [promptNumber]
