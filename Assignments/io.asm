@@ -55,10 +55,12 @@ _start:
     mov rsi, [number]
     call printf
 
+    add rsp, 12
+    
     ; printf() / output the string
     lea rdi, [printString]
     mov rsi, [string]
-    ;call printf
+    call printf
 
 
         
