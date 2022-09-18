@@ -7,7 +7,7 @@
 ;
 
     section .data
-msg:    db "Input number:",0x0a, 0
+promptNumber:    db "Input number:",0x0a, 0
 
 
     section .text
