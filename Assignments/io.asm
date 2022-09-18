@@ -31,6 +31,7 @@ _start:
     
     ; Ask user for number
     lea rdi, [promptNumber]
+    xor rax, rax ; Zero'ing the rax register as it signifies the number of floating pt registers used
     call printf
 
     ; scanf() / input the number
@@ -40,6 +41,7 @@ _start:
 
     ; Ask user for string
     lea rdi, [promptString]
+    xor rax, rax
     call printf
 
     ; scanf() / input the string
@@ -53,13 +55,15 @@ _start:
     ; printf() / output the number
     lea rdi, [printNumber]
     mov rsi, [number]
+    xor rax, rax
     call printf
 
     add rsp, 12
-    
+
     ; printf() / output the string
     lea rdi, [printString]
     mov rsi, [string]
+    xor rax, rax
     call printf
 
 
