@@ -10,7 +10,14 @@ section .data
     promptNumber: db "Input number:", 0
     promptString: db "Input string:", 0
 
+    inputNumber: db "%d", 0
+    inputString: db "%s", 0
 
+    printNumber: db "%d", 0x0a, 0
+    printString: db "%s", 0x0a, 0
+
+section .bss
+    number: resb 4
 
 section .text
     global _start
@@ -23,7 +30,18 @@ _start:
     
     lea rdi, [promptNumber]
     call printf
+    lea rdi, [inputNumber]
+    lea rsi, number
+    call scanf
+    lea rdi, [printNumber]
+    mov rsi, [number]
+    call printf
+    
 
     call exit
     ret
+
+
+
+
 
