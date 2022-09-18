@@ -18,6 +18,7 @@ section .data
 
 section .bss
     number: resb 4
+    string: resb 64
 
 section .text
     global _start
