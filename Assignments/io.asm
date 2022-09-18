@@ -7,8 +7,8 @@
 ;
 
 section .data
-    promptNumber db "Input number: "
-    promptString db "Input string: "
+    promptNumber db "Input number:"
+    promptString db "Input string:"
     outputNumber db "Your chosen number:"
     outputString db "Your chosen string:"
 
