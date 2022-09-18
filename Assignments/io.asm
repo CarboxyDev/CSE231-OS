@@ -31,7 +31,8 @@ _start:
     lea rdi, [promptNumber]
     call printf
     lea rdi, [inputNumber]
-    lea rsi, number
+    mov rdx, number
+    lea rsi, rdx
     call scanf
     lea rdi, [printNumber]
     mov rsi, [number]
