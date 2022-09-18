@@ -14,6 +14,8 @@ promptNumber: db "Input number:", 0x0a, 0
     global _start
     extern printf
     extern scanf
+    extern exit
+
 
 _start:
     push rbp
