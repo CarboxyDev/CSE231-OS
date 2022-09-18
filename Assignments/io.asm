@@ -7,7 +7,7 @@
 ;
 
     section .data
-promptNumber: db "Input number:", 0x0a, 0
+promptNumber: db "Input number:", 0
 
 
     section .text
@@ -23,6 +23,7 @@ _start:
     lea rdi, [promptNumber]
     xor eax, eax
     call printf
+
     xor eax, eax
     pop rbp
     call exit
