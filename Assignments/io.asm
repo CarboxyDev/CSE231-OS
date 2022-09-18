@@ -1,16 +1,18 @@
 ;
 ; Program: IO
-; Description: This program takes a number and string as scanf(), outputs them as printf()
+; Description: This program takes a number and string via C scanf(), outputs them using C printf()
 ; 
 ; Input: number, string
 ; Ouput: number, string
 ;
 
-    section .data
-promptNumber: db "Input number:", 0
+section .data
+    promptNumber: db "Input number:", 0
+    promptString: db "Input string:", 0
 
 
-    section .text
+
+section .text
     global _start
     extern printf
     extern scanf
@@ -18,14 +20,10 @@ promptNumber: db "Input number:", 0
 
 
 _start:
-    push rbp
-    mov rbp, rsp
+    
     lea rdi, [promptNumber]
-    xor eax, eax
     call printf
 
-    xor eax, eax
-    pop rbp
     call exit
     ret
 
