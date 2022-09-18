@@ -11,11 +11,11 @@ promptNumber: db "Input number:", 0x0a, 0
 
 
     section .text
-    global main
+    global _start
     extern printf
     extern scanf
 
-main:
+_start:
     push rbp
     mov rbp, rsp
     lea rdi, [promptNumber]
