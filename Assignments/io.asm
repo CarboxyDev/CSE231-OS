@@ -11,14 +11,14 @@ section .data
     promptString: db "Input string:", 0
 
     inputNumber: db "%d", 0
-    inputString: db "%s", 0
+    inputString: db "%c", 0
 
     printNumber: db "%d", 0x0a, 0
-    printString: db "%s", 0x0a, 0
+    printString: db "%c", 0x0a, 0
 
 section .bss
     number: resb 4
-    string: resb 64
+    string: resb 1
 
 section .text
     global _start
@@ -46,7 +46,7 @@ _start:
 
     ; scanf() / input the string
     lea rdi, [inputString]
-    lea rsi, string
+    mov rsi, [string]
     call scanf
 
 
@@ -63,7 +63,6 @@ _start:
     lea rdi, [printString]
     mov rsi, [string]
     xor rax, rax
-    add rsp, 8
     call printf
 
 

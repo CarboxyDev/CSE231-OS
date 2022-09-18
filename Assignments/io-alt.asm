@@ -1,6 +1,6 @@
 ;
 ; Program: IO
-; Description: This program takes a number and string as scanf(), outputs them as printf()
+; Description: This program takes a number and string as input and then outputs them. Doesn't use C scanf, printf
 ; 
 ; Input: number, string
 ; Ouput: number, string
