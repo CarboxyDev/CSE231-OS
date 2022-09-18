@@ -46,7 +46,7 @@ _start:
 
     ; scanf() / input the string
     lea rdi, [inputString]
-    lea rsi, [string]
+    lea rsi, string
     call scanf
 
 
