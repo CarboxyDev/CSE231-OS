@@ -58,7 +58,6 @@ _start:
     xor rax, rax
     call printf
 
-    add rsp, 12
 
     ; printf() / output the string
     lea rdi, [printString]
