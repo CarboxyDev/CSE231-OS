@@ -11,10 +11,10 @@ section .data
     promptString: db "Input string:", 0
 
     inputNumber: db "%d", 0
-    inputString: db "%c", 0
+    inputString: db "%s", 0
 
     printNumber: db "%d", 0x0a, 0
-    printString: db "%c", 0x0a, 0
+    printString: db "%s", 0x0a, 0
 
 section .bss
     number: resb 4
