@@ -61,7 +61,7 @@ _start:
 
     ; printf() / output the string
     lea rdi, [printString]
-    mov rsi, [string]
+    mov rsi, string
     xor rax, rax
     call printf
         
