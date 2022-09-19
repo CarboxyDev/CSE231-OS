@@ -21,7 +21,7 @@
     21                                 
     22                                 [section .bss]
     23 00000000 <gap>                   number: resb 4
-    24 00000004 <gap>                   string: resb 1
+    24 00000004 <gap>                   string: resb 64
     25                                 
     26                                 [section .text]
     27                                 [global _start]
@@ -39,42 +39,40 @@
     39                                 
     40                                 
     41 00000010 488D3C25[00000000]      lea rdi, [inputNumber]
-    42 00000018 48C7C6[00000000]        mov rsi, number
-    43 0000001F E8(F6FFFFFF)            call scanf
+    42 00000018 488D3425[00000000]      lea rsi, [number]
+    43 00000020 E8(F6FFFFFF)            call scanf
     44                                 
     45                                 
-    46 00000024 488D3C25[00000000]      lea rdi, [promptString]
-    47 0000002C 4831C0                  xor rax, rax
-    48 0000002F E8(F6FFFFFF)            call printf
+    46 00000025 488D3C25[00000000]      lea rdi, [promptString]
+    47 0000002D 4831C0                  xor rax, rax
+    48 00000030 E8(F6FFFFFF)            call printf
     49                                 
     50                                 
-    51 00000034 488D3C25[00000000]      lea rdi, [inputString]
-    52 0000003C 48C7C6[00000000]        mov rsi, string
-    53 00000043 E8(F6FFFFFF)            call scanf
+    51 00000035 488D3C25[00000000]      lea rdi, [inputString]
+    52 0000003D 48C7C6[00000000]        mov rsi, string
+    53 00000044 E8(F6FFFFFF)            call scanf
     54                                 
     55                                 
     56                                 
     57                                 
     58                                 
-    59 00000048 488D3C25[00000000]      lea rdi, [printNumber]
-    60 00000050 488B3425[00000000]      mov rsi, [number]
-    61 00000058 4831C0                  xor rax, rax
-    62 0000005B E8(F6FFFFFF)            call printf
+    59 00000049 488D3C25[00000000]      lea rdi, [printNumber]
+    60 00000051 488B3425[00000000]      mov rsi, [number]
+    61 00000059 4831C0                  xor rax, rax
+    62 0000005C E8(F6FFFFFF)            call printf
     63                                 
     64                                 
     65                                 
-    66 00000060 488D3C25[00000000]      lea rdi, [printString]
-    67 00000068 488B3425[00000000]      mov rsi, [string]
-    68 00000070 4831C0                  xor rax, rax
-    69 00000073 E8(F6FFFFFF)            call printf
+    66 00000061 488D3C25[00000000]      lea rdi, [printString]
+    67 00000069 488B3425[00000000]      mov rsi, [string]
+    68 00000071 4831C0                  xor rax, rax
+    69 00000074 E8(F6FFFFFF)            call printf
     70                                 
     71                                 
-    72                                 
-    73                                 
-    74 00000078 E8(F6FFFFFF)            call exit
-    75 0000007D C3                      ret
+    72 00000079 E8(F6FFFFFF)            call exit
+    73 0000007E C3                      ret
+    74                                 
+    75                                 
     76                                 
     77                                 
     78                                 
-    79                                 
-    80                                 

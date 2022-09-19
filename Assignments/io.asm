@@ -18,7 +18,7 @@ section .data
 
 section .bss
     number: resb 4
-    string: resb 1
+    string: resb 64
 
 section .text
     global _start
@@ -36,7 +36,7 @@ _start:
 
     ; scanf() / input the number
     lea rdi, [inputNumber]
-    mov rsi, number
+    lea rsi, [number]
     call scanf
 
     ; Ask user for string
@@ -64,8 +64,6 @@ _start:
     mov rsi, [string]
     xor rax, rax
     call printf
-
-
         
     ; Exit the program safely (Using C exit function)
     call exit
