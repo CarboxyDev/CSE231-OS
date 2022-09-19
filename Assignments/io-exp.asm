@@ -7,14 +7,14 @@
 ;
 
 section .data
-    promptString: db "Input string:", 0
+    prompt: db "Enter string:", 0
 
-    inputString: db "%s", 0
+    input: db "%s", 0
 
-    printString: db "%s", 0x0a, 0
+    print: db "%s", 0x0a, 0
 
 section .bss
-    string: resb 1
+    string: resb 64
 
 section .text
     global _start
@@ -24,32 +24,22 @@ section .text
 
 
 _start:
-    
 
     ; Ask user for string
-    lea rdi, [promptString]
+    lea rdi, [prompt]
     xor rax, rax
     call printf
-
     ; scanf() / input the string
-    lea rdi, [inputString]
+    lea rdi, [input]
     mov rsi, string
     call scanf
-
-
     ; printf() / output the string
-    lea rdi, [printString]
+    lea rdi, [print]
     mov rsi, [string]
     xor rax, rax
     call printf
 
 
-        
-    ; Exit the program safely (Using C exit function)
     call exit
     ret
-
-
-
-
 
