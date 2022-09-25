@@ -7,7 +7,10 @@
 ;
 
 section .data
-    text db "Hello world!", 10
+    prompt1 db "Input number: "
+    prompt2 db "Input string: "
+    output1 db "Your chosen number:"
+    output2 db "Your chosen string:"
 
 
 section .text
@@ -26,4 +29,3 @@ _start:
 
 
 
-    
