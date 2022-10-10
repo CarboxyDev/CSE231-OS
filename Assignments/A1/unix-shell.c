@@ -7,15 +7,33 @@
 // Internal commands -> cd echo pwd 
 // External commands -> ls cat date rm mkdir
 
+int getWordCount(const char* line) {
+	int wordCount = 1;
+	for (int i = 0; i < strlen(line); i++) {
+		if (line[i] == 32 && i != 0) {
+			wordCount++;
+		}
+	}
+	return wordCount;
+}
 
-void parseShellLine(const char *line) {
+
+
+void parseShellLine(char* line) {
 	if (strcmp(line, "clear") == 0) {
 		clear();
 	}
 	else if (strcmp(line, "exit") == 0) {
 		printf("\n");
 		exit(0);
+	};
+
+
+	if (getWordCount(line) > 1) {
+		char* lineArgs = strtok(line, " ");
 	}
+
+
 }
 
 
@@ -27,7 +45,7 @@ void shell() {
 	
 	printf("%s $ ", USERNAME);
 	fgets(line, 1000, stdin);
-	strtok(line, "\n"); // remove the trailing \n at the end of the line
+	strtok(line, "\n"); // remove the trailing \n at the end of the line. This solution might not be thread-safe
 
 	parseShellLine(line);
 
