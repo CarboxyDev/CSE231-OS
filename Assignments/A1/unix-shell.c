@@ -3,6 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 
+#define MAX_LEN 100
 // Internal commands -> cd echo pwd 
 // External commands -> ls cat date rm mkdir
 
@@ -15,13 +16,21 @@ void checkForInternalCommand(char *command, char *rootCommand, char* args[]) {
 void debug(char *command, char *rootCommand, char *args[]) {
 	printf("[ROOT] %s\n", rootCommand);
 	printf("[CMD] %s\n", command);
-	printf("[ARGS] %s\n", command);
+	printf("[ARGS] ");
+
+	for (int i=0; i < MAX_LEN; i++) {
+		if (args[i] == NULL) { // reached the end of arguments list
+			break;
+		}
+		printf("%s #  ", args[i]);
+	}
+	printf("\n");
+
 }
 
 	/* Basic Commands */
 
-	void checkForBasicCommand(char *command)
-{
+void checkForBasicCommand(char *command) {
 	if (strcmp(command, "clear") == 0) {
 		printf("\033[H\033[J"); // clears the console
 	}
@@ -38,7 +47,7 @@ void shellPrompt() {
 
 void shellInput(char command[], char rootCommand[], char* args[]) {
 	char line[1000];
-	char* arr[100];
+	char* arr[MAX_LEN];
 	char* parse;
 
 	int c = 0;
@@ -60,6 +69,7 @@ void shellInput(char command[], char rootCommand[], char* args[]) {
 		arr[c2++] = strdup(parse);
 		parse = strtok(NULL, "\n");
 	} 
+
 	strcpy(command, arr[0]);
  
 	for (int x=0; x < c2; x++) {
@@ -67,6 +77,7 @@ void shellInput(char command[], char rootCommand[], char* args[]) {
 	}
 
 	args[c2] = NULL; // end the arguments list with a NULL terminator
+
 
 };
 
@@ -76,9 +87,9 @@ int main()
 
 	while (1)
 	{
-		char command[100];
-		char rootCommand[100]; // basically the first word of the command like echo, ls, etc
-		char *args[100];
+		char command[MAX_LEN];
+		char rootCommand[MAX_LEN]; // basically the first word of the command like echo, ls, etc
+		char *args[MAX_LEN];
 
 		shellPrompt(); // prompt for the shell
 		shellInput(command, rootCommand, args); // gets the input for the shell
