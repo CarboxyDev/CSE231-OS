@@ -30,9 +30,18 @@ void parseShellLine(char* line) {
 
 
 	if (getWordCount(line) > 1) {
-		char* lineArgs = strtok(line, " ");
-	}
-
+		char* wordArg;
+		char* allArgs[getWordCount(line)];
+		wordArg = strtok(line, " ");
+		int i = 0;
+		while (wordArg != NULL) {
+			printf(" -> %s", wordArg);
+			wordArg = strtok(NULL, " ");
+			strcpy(allArgs[i], wordArg);
+			i++;
+		}
+		printf("\n");
+	};
 
 }
 
