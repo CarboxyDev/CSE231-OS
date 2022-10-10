@@ -9,8 +9,8 @@
 
 
 void shell() {
-	const char* USERNAME = "arman";
-	char* line;
+	const char USERNAME[] = "arman";
+	char line[1000];
 
 	printf("%s $ ", USERNAME);
 	scanf(" %[^\n]s", line);
