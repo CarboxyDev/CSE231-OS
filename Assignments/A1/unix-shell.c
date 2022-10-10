@@ -6,8 +6,22 @@
 // Internal commands -> cd echo pwd 
 // External commands -> ls cat date rm mkdir
 
+/* Internal Commands */
 
-void checkForBasicCommand(char* command) {
+void checkForInternalCommand(char *command, char *rootCommand, char* args[]) {
+
+}
+
+void debug(char *command, char *rootCommand, char *args[]) {
+	printf("[ROOT] %s\n", rootCommand);
+	printf("[CMD] %s\n", command);
+	printf("[ARGS] %s\n", command);
+}
+
+	/* Basic Commands */
+
+	void checkForBasicCommand(char *command)
+{
 	if (strcmp(command, "clear") == 0) {
 		printf("\033[H\033[J"); // clears the console
 	}
@@ -22,21 +36,23 @@ void shellPrompt() {
 	printf("%s $ ", user);
 }
 
-void shellInput(char command[], char* args[]) {
+void shellInput(char command[], char rootCommand[], char* args[]) {
 	char line[1000];
 	char* arr[100];
 	char* parse;
 
 	int c = 0;
 	while (1) {
-		int chr = getc(stdin);
+		int chr = fgetc(stdin);
 		line[c++] = (char) chr;
 		if (chr == '\n') {
 			break;
 		}
 	};
 
-	if (c == 1) { return; }; // no command was written
+	if (c == 1) { // executes when no command was written
+		return;
+	};							
 	parse = strtok(line, "\n"); // remove the trailing \n at the end of the line. This solution might not be thread-safe
 
 	int c2 = 0;
@@ -44,7 +60,6 @@ void shellInput(char command[], char* args[]) {
 		arr[c2++] = strdup(parse);
 		parse = strtok(NULL, "\n");
 	} 
-
 	strcpy(command, arr[0]);
  
 	for (int x=0; x < c2; x++) {
@@ -52,13 +67,6 @@ void shellInput(char command[], char* args[]) {
 	}
 
 	args[c2] = NULL; // end the arguments list with a NULL terminator
-	printf("%s\n", line);
-
-	/*
-	fgets(line, 1000, stdin);
-	strtok(line, "\n"); // remove the trailing \n at the end of the line. This solution might not be thread-safe
- 	*/
-	//checkForBasicCommand(line); // run commands like exit, clear
 
 };
 
@@ -73,19 +81,17 @@ int main()
 		char *args[100];
 
 		shellPrompt(); // prompt for the shell
-		shellInput(command, args); // gets the input for the shell
+		shellInput(command, rootCommand, args); // gets the input for the shell
+
+		debug(command, rootCommand, args); // For debugging purposes
 
 		checkForBasicCommand(command); // check and run commands like exit, clear
+		checkForInternalCommand(command, rootCommand, args);
 	}
 
 	return 0;
 }
 
-
-void echoCommand(char **allArgs)
-{
-	printf("echo command found. First arg is %s", allArgs[0]);
-};
 
 int getWordCount(char *line)
 {
