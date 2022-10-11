@@ -116,3 +116,10 @@ int getWordCount(char *line)
 	}
 	return wordCount;
 }
+
+
+void echo();
+void cd();
+void pwd();
+
+
