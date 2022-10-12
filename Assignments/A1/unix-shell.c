@@ -3,7 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#define MAX_LEN 100
+#define MAX_ARR_LEN 100
 // Internal commands -> cd echo pwd 
 // External commands -> ls cat date rm mkdir
 
@@ -18,7 +18,7 @@ void debug(char *command, char *rootCommand, char *args[]) {
 	printf("[CMD] %s\n", command);
 	printf("[ARGS] ");
 
-	for (int i=0; i < MAX_LEN; i++) {
+	for (int i=0; i < MAX_ARR_LEN; i++) {
 		if (args[i] == NULL) { // reached the end of arguments list
 			break;
 		}
@@ -47,7 +47,7 @@ void shellPrompt() {
 
 void shellInput(char command[], char rootCommand[], char* args[]) {
 	char line[1000];
-	char* arr[MAX_LEN];
+	char* arr[MAX_ARR_LEN];
 	char* parse;
 
 	int c = 0;
@@ -86,10 +86,10 @@ int main()
 	printf("[!] Switched to UNIX Shell.\n\n");
 
 	while (1)
-	{
-		char command[MAX_LEN];
-		char rootCommand[MAX_LEN]; // basically the first word of the command like echo, ls, etc
-		char *args[MAX_LEN];
+	{	
+		char command[MAX_ARR_LEN];
+		char rootCommand[MAX_ARR_LEN]; // basically the first word of the command like echo, ls, etc
+		char *args[MAX_ARR_LEN];
 
 		shellPrompt(); // prompt for the shell
 		shellInput(command, rootCommand, args); // gets the input for the shell
