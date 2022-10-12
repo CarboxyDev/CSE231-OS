@@ -13,6 +13,7 @@ void pwd(char command[], char rootCommand[], char *args[]);
 
 
 void debug(char command[], char rootCommand[], char *args[]) {
+	/*
 	printf("[ROOT] %s\n", rootCommand);
 	printf("[CMD] %s\n", command);
 	printf("[ARGS] ");
@@ -24,7 +25,7 @@ void debug(char command[], char rootCommand[], char *args[]) {
 		printf("%s || ", args[i]);
 	}
 	printf("\n");
-
+	*/
 }
 
 	
@@ -139,7 +140,6 @@ int getWordCount(char *line)
 char* findFlagInCommand(char command[], char* secondWord) {
 	// check the second word and see if it is a flag
 	int whitespaceCount = 0;
-	//char secondWord[MAX_ARR_LEN];
 	int x = 0;
 
 	for (int i=0; i < MAX_ARR_LEN; i++) {
@@ -157,26 +157,69 @@ char* findFlagInCommand(char command[], char* secondWord) {
 		}
 		if (whitespaceCount == 1 && command[i] != ' ') { // second word is starting now
 			secondWord[x] = command[i];
-			//printf("%s", secondWord);
 			x++;
 		}
 
 	}
 
-	// received second word of the command by this point
 	return secondWord;
 
 }
 
+char* getContent(char command[], char* content, int containsFlag) {
+
+	int whitespaceCount = 0;
+	int x = 0;
+	if (!containsFlag) {
+		for (int i=0; i < MAX_ARR_LEN; i++) {
+			char chr = command[i];
+			if (chr == '\0' || chr == '\n') {
+				content[x] = '\0';
+				break;
+			}
+
+			if (whitespaceCount > 0) {
+				content[x] = chr;
+				x++;
+			}
+			
+			if (chr == ' ') {
+				whitespaceCount++;
+			}
+
+		}
+	}
+
+	return content;
+
+}
+
+
+
 
 void echo(char command[], char rootCommand[], char* args[]) {
 
-	char sw[MAX_ARR_LEN]; 
-	char* secondWordTemp = findFlagInCommand(command, sw);
-	char secondWord[MAX_ARR_LEN];
-	strcpy(secondWord, secondWordTemp);
+	char sw[MAX_ARR_LEN];
+	char secondWord[MAX_ARR_LEN]; // second word is basically the flag
+	char* secondWordPtr = findFlagInCommand(command, sw);
+	strcpy(secondWord, secondWordPtr);
 
-	printf("[!] Call echo | Flag is %s\n", secondWord);
+	if (strcmp(secondWord,"-n") == 0) {
+
+	}
+	else if (strcmp(secondWord, "--help") == 0) {
+		// print the help menu for echo
+	}
+	else {
+		char cnt[MAX_ARR_LEN];
+		char content[MAX_ARR_LEN]; // contains all the content which excludes the root command and the flag
+		char* contentPtr = getContent(command, cnt, 0);
+		strcpy(content, contentPtr);
+		printf("%s\n", content);
+	};
+
+
+	//printf("[!] Call echo | Secondword/flag is %s\n", secondWord);
 
 
 }
