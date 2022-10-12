@@ -2,14 +2,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <limits.h>
 
 #define MAX_ARR_LEN 100
 // Internal commands -> cd echo pwd 
 // External commands -> ls cat date rm mkdir
 
-void echo(char command[], char rootCommand[], char* args[]);
-void cd(char command[], char rootCommand[], char *args[]);
-void pwd(char command[], char rootCommand[], char *args[]);
+void echo(char command[], char rootCommand[]);
+void cd(char command[], char rootCommand[]);
+void pwd(char command[], char rootCommand[]);
 
 
 void debug(char command[], char rootCommand[], char *args[]) {
@@ -43,9 +44,11 @@ void checkForBasicCommand(char command[]) {
 void checkForInternalCommand(char command[], char rootCommand[], char *args[]) {
 
 	if (strcmp(rootCommand, "echo") == 0) {
-		echo(command, rootCommand, args);
+		echo(command, rootCommand);
 	}
-
+	else if (strcmp(rootCommand, "pwd") == 0) {
+		pwd(command, rootCommand);
+	}
 
 
 }
@@ -218,7 +221,9 @@ char* getContent(char command[], char* content, int containsFlag) {
 
 
 
-void echo(char command[], char rootCommand[], char* args[]) {
+void echo(char command[], char rootCommand[]) {
+
+	//todo: handle quotations in the echo message
 
 	char sw[MAX_ARR_LEN];
 	char secondWord[MAX_ARR_LEN]; // second word is basically the flag
@@ -244,23 +249,23 @@ void echo(char command[], char rootCommand[], char* args[]) {
 		printf("--help : Prints this message\n");
 	}
 	else {
-// contains all the content which excludes the root command and the flag
+		// contains all the content which excludes the root command and the flag
 		char* contentPtr = getContent(command, cnt, 0);
 		strcpy(content, contentPtr);
 		printf("%s\n", content);
 	};
 
 
-	//printf("[!] Call echo | Secondword/flag is %s\n", secondWord);
-
 
 }
 
+void pwd(char command[], char rootCommand[]) {
+	char currentDir[PATH_MAX];
+
+	if (getcwd(currentDir, sizeof(currentDir)) != NULL) {
+		printf("%s\n", currentDir);
+	}
 
 
 
-
-
-
-
-
+};
