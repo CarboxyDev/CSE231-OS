@@ -7,11 +7,12 @@
 // Internal commands -> cd echo pwd 
 // External commands -> ls cat date rm mkdir
 
-void checkForInternalCommand(char *command, char *rootCommand, char* args[]) {
+void echo(char command[], char rootCommand[], char* args[]);
+void cd(char command[], char rootCommand[], char *args[]);
+void pwd(char command[], char rootCommand[], char *args[]);
 
-}
 
-void debug(char *command, char *rootCommand, char *args[]) {
+void debug(char command[], char rootCommand[], char *args[]) {
 	printf("[ROOT] %s\n", rootCommand);
 	printf("[CMD] %s\n", command);
 	printf("[ARGS] ");
@@ -20,7 +21,7 @@ void debug(char *command, char *rootCommand, char *args[]) {
 		if (args[i] == NULL) { // reached the end of arguments list
 			break;
 		}
-		printf("%s #  ", args[i]);
+		printf("%s || ", args[i]);
 	}
 	printf("\n");
 
@@ -28,7 +29,7 @@ void debug(char *command, char *rootCommand, char *args[]) {
 
 	
 
-void checkForBasicCommand(char *command) {
+void checkForBasicCommand(char command[]) {
 	if (strcmp(command, "clear") == 0) {
 		printf("\033[H\033[J"); // clears the console
 	}
@@ -36,6 +37,16 @@ void checkForBasicCommand(char *command) {
 		printf("\n");
 		exit(0);
 	};
+}
+
+void checkForInternalCommand(char command[], char rootCommand[], char *args[]) {
+
+	if (strcmp(rootCommand, "echo") == 0) {
+		echo(command, rootCommand, args);
+	}
+
+
+
 }
 
 void shellPrompt() {
@@ -76,7 +87,7 @@ void shellInput(char command[], char rootCommand[], char* args[]) {
 
 	args[c2] = NULL; // end the arguments list with a NULL terminator
 
-
+	// to generate the root command
 	for (int i=0; i < MAX_ARR_LEN; i++) {
 		char chr = command[i];
 		if (chr == '\0' || chr == ' ' || chr == '\n') {
@@ -125,9 +136,50 @@ int getWordCount(char *line)
 	return wordCount;
 }
 
+char* findFlagInCommand(char command[], char* secondWord) {
+	// check the second word and see if it is a flag
+	int whitespaceCount = 0;
+	//char secondWord[MAX_ARR_LEN];
+	int x = 0;
 
-void echo();
-void cd();
-void pwd();
+	for (int i=0; i < MAX_ARR_LEN; i++) {
+		char chr = command[i];
+		if (chr == '\0' || chr == '\n') {
+			break;
+		}
+		if (chr == ' ') { 
+			whitespaceCount++;
+			x = 0;
+		}
+		if (whitespaceCount == 1) { // second word is starting now
+			secondWord[x] = command[i];
+			x++;
+		}
+	}
+
+	// received second word of the command by this point
+	return secondWord;
+
+}
+
+
+void echo(char command[], char rootCommand[], char* args[]) {
+
+	char sw[MAX_ARR_LEN]; 
+	char* secondWordTemp = findFlagInCommand(command, sw);
+	char secondWord[MAX_ARR_LEN];
+	strcpy(secondWord, secondWordTemp);
+	
+	printf("[!] Call echo | Flag is %s\n", secondWord);
+
+
+}
+
+
+
+
+
+
+
 
 
