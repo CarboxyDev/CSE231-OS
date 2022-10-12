@@ -7,8 +7,6 @@
 // Internal commands -> cd echo pwd 
 // External commands -> ls cat date rm mkdir
 
-/* Internal Commands */
-
 void checkForInternalCommand(char *command, char *rootCommand, char* args[]) {
 
 }
@@ -28,7 +26,7 @@ void debug(char *command, char *rootCommand, char *args[]) {
 
 }
 
-	/* Basic Commands */
+	
 
 void checkForBasicCommand(char *command) {
 	if (strcmp(command, "clear") == 0) {
@@ -78,6 +76,16 @@ void shellInput(char command[], char rootCommand[], char* args[]) {
 
 	args[c2] = NULL; // end the arguments list with a NULL terminator
 
+
+	for (int i=0; i < MAX_ARR_LEN; i++) {
+		char chr = command[i];
+		if (chr == '\0' || chr == ' ' || chr == '\n') {
+			rootCommand[i] = '\0';
+			break;
+		}
+		rootCommand[i] = chr;
+
+	}
 
 };
 
