@@ -190,6 +190,27 @@ char* getContent(char command[], char* content, int containsFlag) {
 		}
 	}
 
+	if (containsFlag) {
+		for (int i = 0; i < MAX_ARR_LEN; i++)
+		{
+			char chr = command[i];
+			if (chr == '\0' || chr == '\n') {
+				content[x] = '\0';
+				break;
+			}
+
+			if (whitespaceCount > 1) {
+				content[x] = chr;
+				x++;
+			}
+
+			if (chr == ' ') {
+				whitespaceCount++;
+			}
+		}
+	}
+
+
 	return content;
 
 }
@@ -204,15 +225,26 @@ void echo(char command[], char rootCommand[], char* args[]) {
 	char* secondWordPtr = findFlagInCommand(command, sw);
 	strcpy(secondWord, secondWordPtr);
 
-	if (strcmp(secondWord,"-n") == 0) {
+	char cnt[MAX_ARR_LEN];
+	char content[MAX_ARR_LEN];
 
+	if (strcmp(secondWord,"-n") == 0) {
+		char* contentPtr = getContent(command, cnt, 1);
+		strcpy(content, contentPtr);
+		printf("%s", content);
 	}
 	else if (strcmp(secondWord, "--help") == 0) {
 		// print the help menu for echo
+		printf("HELP FOR ECHO\n");
+		printf("Usage format:\n");
+		printf("Without flags: echo <message>\n\n");
+		printf("With flags: echo [-n/--help] <message>\n\n");
+		printf("Flags: \n");
+		printf("-n : Prints the message without a newline character at the end\n");
+		printf("--help : Prints this message\n");
 	}
 	else {
-		char cnt[MAX_ARR_LEN];
-		char content[MAX_ARR_LEN]; // contains all the content which excludes the root command and the flag
+// contains all the content which excludes the root command and the flag
 		char* contentPtr = getContent(command, cnt, 0);
 		strcpy(content, contentPtr);
 		printf("%s\n", content);
