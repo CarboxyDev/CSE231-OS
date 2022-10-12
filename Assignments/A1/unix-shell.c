@@ -4,7 +4,9 @@
 #include <unistd.h>
 #include <limits.h>
 
+#define DEBUG 0
 #define MAX_ARR_LEN 100
+
 // Internal commands -> cd echo pwd 
 // External commands -> ls cat date rm mkdir
 
@@ -14,20 +16,23 @@ void pwd(char command[], char rootCommand[]);
 
 
 void debug(char command[], char rootCommand[], char *args[]) {
-	/*
-	printf("[ROOT] %s\n", rootCommand);
-	printf("[CMD] %s\n", command);
-	printf("[ARGS] ");
+	if (DEBUG) {
+		printf("[ROOT] %s\n", rootCommand);
+		printf("[CMD] %s\n", command);
+		printf("[ARGS] ");
 
-	for (int i=0; i < MAX_ARR_LEN; i++) {
-		if (args[i] == NULL) { // reached the end of arguments list
-			break;
+		for (int i = 0; i < MAX_ARR_LEN; i++)
+		{
+			if (args[i] == NULL)
+			{ // reached the end of arguments list
+				break;
+			}
+			printf("%s || ", args[i]);
 		}
-		printf("%s || ", args[i]);
+		printf("\n");
 	}
-	printf("\n");
-	*/
-}
+	}
+
 
 	
 
@@ -55,8 +60,24 @@ void checkForInternalCommand(char command[], char rootCommand[], char *args[]) {
 
 void shellPrompt() {
 	char* user = getenv("USER");
-	printf("%s $ ", user);
+	char currentDir[PATH_MAX];
+	char pwdLastDir[MAX_ARR_LEN];
+
+	if (getcwd(currentDir, sizeof(currentDir)) != NULL) {
+		char* token = strtok(currentDir,"/");
+		char checkedToken[MAX_ARR_LEN];
+		while (token != NULL) {
+			token = strtok(NULL, "/");
+			if (token != NULL) {
+				strcpy(checkedToken, token);
+			}
+		}
+		strcpy(pwdLastDir, checkedToken);
+
+	}
+	printf("%s %s $ ", user, pwdLastDir);
 }
+
 
 void shellInput(char command[], char rootCommand[], char* args[]) {
 	char line[1000];
@@ -102,10 +123,10 @@ void shellInput(char command[], char rootCommand[], char* args[]) {
 
 	}
 
-};
+}
 
-int main()
-{
+
+int main() {
 	printf("[!] Switched to UNIX Shell.\n\n");
 
 	while (1)
@@ -127,8 +148,7 @@ int main()
 }
 
 
-int getWordCount(char *line)
-{
+int getWordCount(char *line) {
 	int wordCount = 1;
 	for (int i = 0; i < strlen(line); i++)
 	{
@@ -139,6 +159,7 @@ int getWordCount(char *line)
 	}
 	return wordCount;
 }
+
 
 char* findFlagInCommand(char command[], char* secondWord) {
 	// check the second word and see if it is a flag
@@ -168,6 +189,7 @@ char* findFlagInCommand(char command[], char* secondWord) {
 	return secondWord;
 
 }
+
 
 char* getContent(char command[], char* content, int containsFlag) {
 
@@ -219,8 +241,6 @@ char* getContent(char command[], char* content, int containsFlag) {
 }
 
 
-
-
 void echo(char command[], char rootCommand[]) {
 
 	//todo: handle quotations in the echo message
@@ -255,9 +275,8 @@ void echo(char command[], char rootCommand[]) {
 		printf("%s\n", content);
 	};
 
-
-
 }
+
 
 void pwd(char command[], char rootCommand[]) {
 	char currentDir[PATH_MAX];
