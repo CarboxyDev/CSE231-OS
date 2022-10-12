@@ -145,16 +145,22 @@ char* findFlagInCommand(char command[], char* secondWord) {
 	for (int i=0; i < MAX_ARR_LEN; i++) {
 		char chr = command[i];
 		if (chr == '\0' || chr == '\n') {
+			secondWord[x] = '\0';
 			break;
 		}
 		if (chr == ' ') { 
 			whitespaceCount++;
-			x = 0;
 		}
-		if (whitespaceCount == 1) { // second word is starting now
+		if (whitespaceCount > 1) {
+			secondWord[x] = '\0';
+			break;
+		}
+		if (whitespaceCount == 1 && command[i] != ' ') { // second word is starting now
 			secondWord[x] = command[i];
+			//printf("%s", secondWord);
 			x++;
 		}
+
 	}
 
 	// received second word of the command by this point
@@ -169,7 +175,7 @@ void echo(char command[], char rootCommand[], char* args[]) {
 	char* secondWordTemp = findFlagInCommand(command, sw);
 	char secondWord[MAX_ARR_LEN];
 	strcpy(secondWord, secondWordTemp);
-	
+
 	printf("[!] Call echo | Flag is %s\n", secondWord);
 
 
