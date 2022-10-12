@@ -43,7 +43,7 @@ void checkForBasicCommand(char command[]) {
 	else if (strcmp(command, "exit") == 0) {
 		printf("\n");
 		exit(0);
-	};
+	}
 }
 
 void checkForInternalCommand(char command[], char rootCommand[], char *args[]) {
@@ -54,6 +54,9 @@ void checkForInternalCommand(char command[], char rootCommand[], char *args[]) {
 	else if (strcmp(rootCommand, "pwd") == 0) {
 		pwd(command, rootCommand);
 	}
+	else if (strcmp(rootCommand, "cd") == 0) {
+		cd(command, rootCommand);
+	}
 
 
 }
@@ -62,17 +65,29 @@ void shellPrompt() {
 	char* user = getenv("USER");
 	char currentDir[PATH_MAX];
 	char pwdLastDir[MAX_ARR_LEN];
+	int skipToken = 0;
 
 	if (getcwd(currentDir, sizeof(currentDir)) != NULL) {
-		char* token = strtok(currentDir,"/");
-		char checkedToken[MAX_ARR_LEN];
-		while (token != NULL) {
-			token = strtok(NULL, "/");
-			if (token != NULL) {
-				strcpy(checkedToken, token);
-			}
+		if (strcmp(currentDir, "/") == 0) {
+			char* p = "/";
+			strcpy(pwdLastDir, p);
+			skipToken = 1;
+
 		}
-		strcpy(pwdLastDir, checkedToken);
+		if (!skipToken) {
+			char *token = strtok(currentDir, "/");
+			char checkedToken[MAX_ARR_LEN];
+			while (token != NULL)
+			{
+				token = strtok(NULL, "/");
+				if (token != NULL)
+				{
+					strcpy(checkedToken, token);
+				}
+			}
+			strcpy(pwdLastDir, checkedToken);
+		}
+
 
 	}
 	printf("%s %s $ ", user, pwdLastDir);
@@ -277,6 +292,25 @@ void echo(char command[], char rootCommand[]) {
 
 }
 
+void cd(char command[], char rootCommand[]) {
+	char sw[MAX_ARR_LEN];
+	char secondWord[MAX_ARR_LEN]; // second word is basically the flag
+	char *secondWordPtr = findFlagInCommand(command, sw);
+	strcpy(secondWord, secondWordPtr);
+
+	// the secondWord variable contains the directory to which the person wants to cd to
+
+	int success = chdir(secondWord);
+	if (success == 0) { // success
+
+	}
+	else if (success == -1) { // failure
+		printf("Error: Could not cd to that directory!\n");
+	}
+
+
+}
+
 
 void pwd(char command[], char rootCommand[]) {
 	char currentDir[PATH_MAX];
@@ -284,7 +318,5 @@ void pwd(char command[], char rootCommand[]) {
 	if (getcwd(currentDir, sizeof(currentDir)) != NULL) {
 		printf("%s\n", currentDir);
 	}
-
-
 
 };
