@@ -28,8 +28,7 @@ void runExternalCommand(char command[], char rootCommand[], char* args[]) {
 		char binPath[MAX_ARR_LEN] = "cmdbin/";
 		strcat(binPath, rootCommand);
 
-
-		int execBin = execv(binPath, args);
+		int execBin = execv(binPath, NULL);
 		exit(0);
 
 	}
@@ -88,10 +87,10 @@ void checkForInternalCommand(char command[], char rootCommand[], char *args[]) {
 	}
 }
 
-void checkForExternalCommand(char command[], char rootCommand[]) {
+void checkForExternalCommand(char command[], char rootCommand[], char* args[]) {
 
 	if (strcmp(rootCommand, "cat") == 0 || strcmp(rootCommand, "ls") == 0 || strcmp(rootCommand, "date") == 0 || strcmp(rootCommand, "rm") == 0 || strcmp(rootCommand, "mkdir") == 0) {
-		runExternalCommand(command, rootCommand);
+		runExternalCommand(command, rootCommand, args);
 	}
 }
 
@@ -194,7 +193,7 @@ int main() {
 
 		checkForBasicCommand(command); // check and run commands like exit, clear
 		checkForInternalCommand(command, rootCommand, args);
-		checkForExternalCommand(command, rootCommand);
+		checkForExternalCommand(command, rootCommand, args);
 	}
 
 	return 0;
