@@ -126,9 +126,9 @@ void shellPrompt() {
 			strcpy(pwdLastDir, checkedToken);
 		}
 	}
-	printf("\033[0;33m"); // turn color to yellow
-	printf("%s", user); // print the username in yellow color
-	printf("\033[0m"); // reset color to default
+	printf("\033[0;33m"); // turn color to custom co;or
+	printf("%s", user); // print the username in custom color
+	printf("\033[97m"); // reset color to default
 	printf(" %s $ ", pwdLastDir);
 }
 
@@ -207,7 +207,7 @@ int checkForValidCommand(char rootCommand[]) {
 
 int main() {
 	printf("\033[H\033[J"); // clears the console
-	printf("\033[48;5;57m"); // sets foreground and/or background to custom colors
+	printf("\033[48;5;105m"); // sets foreground and/or background to custom colors
 	printf("[!] Switched to ");
 	printf("ARMSH \n\n");
 	printf("\033[0m");	   // reset color to default
