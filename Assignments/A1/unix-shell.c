@@ -7,6 +7,7 @@
 #define DEBUG 0
 #define MAX_ARR_LEN 1000
 
+
 // Internal commands -> cd echo pwd 
 // External commands -> ls cat date rm mkdir
 
@@ -61,12 +62,15 @@ void debug(char command[], char rootCommand[], char* args[]) {
 	
 
 void checkForBasicCommand(char command[]) {
+
 	if (strcmp(command, "clear") == 0) {
 		printf("\033[H\033[J"); // clears the console
 	}
 	else if (strcmp(command, "exit") == 0) {
 		printf("\n");
 		exit(0);
+	}
+	else {
 	}
 }
 
@@ -81,12 +85,15 @@ void checkForInternalCommand(char command[], char rootCommand[]) {
 	else if (strcmp(rootCommand, "cd") == 0) {
 		cd(command, rootCommand);
 	}
+	else {
+	}
 }
 
 void checkForExternalCommand(char command[], char rootCommand[], char* args[]) {
-
 	if (strcmp(rootCommand, "cat") == 0 || strcmp(rootCommand, "ls") == 0 || strcmp(rootCommand, "date") == 0 || strcmp(rootCommand, "rm") == 0 || strcmp(rootCommand, "mkdir") == 0) {
 		runExternalCommand(command, rootCommand, args);
+	}
+	else {
 	}
 }
 
@@ -182,6 +189,22 @@ void shellInput(char command[], char rootCommand[], char* args[]) {
 }
 
 
+int checkForValidCommand(char rootCommand[]) {
+	if (strcmp(rootCommand,"clear") == 0 || strcmp(rootCommand,"exit") == 0 ) {
+		return 1;
+	}
+	else if (strcmp(rootCommand, "echo") == 0 || strcmp(rootCommand, "cd") == 0 || strcmp(rootCommand, "pwd") == 0) {
+		return 1;
+	}
+	else if (strcmp(rootCommand, "cat") == 0 || strcmp(rootCommand, "ls") == 0 || strcmp(rootCommand, "date") == 0 || strcmp(rootCommand, "rm") == 0 || strcmp(rootCommand, "mkdir") == 0) {
+		return 1;
+	}
+	else {
+		return 0;
+	}
+}
+
+
 int main() {
 	printf("\033[H\033[J"); // clears the console
 	printf("\033[48;5;57m"); // sets foreground and/or background to custom colors
@@ -203,6 +226,11 @@ int main() {
 		checkForBasicCommand(command); // check and run commands like exit, clear
 		checkForInternalCommand(command, rootCommand); // check for internal commands like echo, pwd
 		checkForExternalCommand(command, rootCommand, args); // check for external commands like ls, cat
+
+		if (!checkForValidCommand(rootCommand)) {
+			printf("armsh: command not found: %s\n", rootCommand);
+		}
+	
 	}
 
 	return 0;
