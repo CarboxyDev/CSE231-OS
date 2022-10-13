@@ -5,7 +5,7 @@
 #include <limits.h>
 
 #define DEBUG 1
-#define MAX_ARR_LEN 100
+#define MAX_ARR_LEN 1000
 
 // Internal commands -> cd echo pwd 
 // External commands -> ls cat date rm mkdir
@@ -14,7 +14,7 @@ void echo(char command[], char rootCommand[]);
 void cd(char command[], char rootCommand[]);
 void pwd(char command[], char rootCommand[]);
 
-void runExternalCommand(char command[], char rootCommand[], char* args[]) {
+void runExternalCommand(char command[], char rootCommand[], char args[][MAX_ARR_LEN]) {
 	printf("[!] External command %s found\n", rootCommand);
 
 	pid_t forkType = fork();
@@ -23,12 +23,12 @@ void runExternalCommand(char command[], char rootCommand[], char* args[]) {
 		printf("Error: Failed to run this external command due to a forking error.");
 	}
 	else if (forkType == 0) { // for child process
-		printf("child process...");
 
 		char binPath[MAX_ARR_LEN] = "cmdbin/";
 		strcat(binPath, rootCommand);
 
-		int execBin = execv(binPath, NULL);
+		int execBin = execl(binPath, "arg1",NULL);
+
 		exit(0);
 
 	}
@@ -36,30 +36,26 @@ void runExternalCommand(char command[], char rootCommand[], char* args[]) {
 		wait(NULL);
 	} 
 
-
-
-
 }
 
 
 
-void debug(char command[], char rootCommand[], char *args[]) {
+void debug(char command[], char rootCommand[], char args[][MAX_ARR_LEN]) {
 	if (DEBUG) {
 		printf("[ROOT] %s\n", rootCommand);
 		printf("[CMD] %s\n", command);
 		printf("[ARGS] ");
-
-		for (int i = 0; i < MAX_ARR_LEN; i++)
-		{
-			if (args[i] == NULL)
-			{ // reached the end of arguments list
+		/*
+		for (int i = 0; i < 10; i++) {
+			if (args[i] == NULL) { // reached the end of arguments list
 				break;
 			}
 			printf("%s || ", args[i]);
 		}
 		printf("\n");
+		*/
 	}
-	}
+}
 
 
 	
@@ -87,7 +83,7 @@ void checkForInternalCommand(char command[], char rootCommand[]) {
 	}
 }
 
-void checkForExternalCommand(char command[], char rootCommand[], char* args[]) {
+void checkForExternalCommand(char command[], char rootCommand[], char args[][MAX_ARR_LEN]) {
 
 	if (strcmp(rootCommand, "cat") == 0 || strcmp(rootCommand, "ls") == 0 || strcmp(rootCommand, "date") == 0 || strcmp(rootCommand, "rm") == 0 || strcmp(rootCommand, "mkdir") == 0) {
 		runExternalCommand(command, rootCommand, args);
@@ -122,33 +118,82 @@ void shellPrompt() {
 			}
 			strcpy(pwdLastDir, checkedToken);
 		}
-
-
 	}
-	printf("%s %s $ ", user, pwdLastDir);
+	printf("\033[0;33m"); // turn color to yellow
+	printf("%s", user); // print the username in yellow color
+	printf("\033[0m"); // reset color to default
+	printf(" %s $ ", pwdLastDir);
 }
 
 
-void shellInput(char command[], char rootCommand[], char* args[]) {
-	char line[1000];
-	char* arr[MAX_ARR_LEN];
-	char* parse;
+void shellInput(char command[], char rootCommand[], char args[][MAX_ARR_LEN]) {
+	char line[MAX_ARR_LEN];
+	char arr[MAX_ARR_LEN][MAX_ARR_LEN];
 
-	int c = 0;
+	int chrCount = 0;
 	while (1) {
 		int chr = fgetc(stdin);
-		line[c++] = (char) chr;
+		line[chrCount++] = (char) chr;
 		if (chr == '\n') {
 			break;
 		}
 	};
 
-
-	if (c == 1) { // executes when no command was written
+	if (chrCount == 1) { // executes when no command was written
 		return;
-	};							
-	parse = strtok(line, "\n"); // remove the trailing \n at the end of the line. This solution might not be thread-safe
+	};
 
+	char *parse;
+	parse = strtok(line, "\n"); // remove the trailing \n at the end of the line. This solution might not be thread-safe
+	
+	strcpy(command, parse);
+
+
+	/* Generate the args array of Strings */
+
+	int whitespaceCount = 0;
+	int x = 0;
+	int c = 0;
+
+	for (int i = 0; i < MAX_ARR_LEN; i++) {
+		char chr = command[i];
+		
+		if (chr == '\0') {
+			//args[x] = NULL;
+			//strcpy(args[x], "END");
+			break;
+		}
+
+		if (whitespaceCount > 1 && chr != ' ') {
+			args[x][c] = command[i];
+			c++;
+		}
+		if (chr == ' ') { // whitespace encountered	
+			whitespaceCount++;
+			if (whitespaceCount != 1) {
+				args[x][c] = '\0';
+				x++;
+			}
+			c = 0;
+		}
+
+	}
+	/*
+	printf("ARGS ->");
+
+	for (int i = 0; i < MAX_ARR_LEN; i++) {
+		if (args[i] == NULL) {
+			break;
+		}
+		printf("%s", args[i]);
+		printf("|");
+	}
+	printf("\n");
+	
+	*/
+	
+	
+	/*
 	int c2 = 0;
 	while (parse != NULL) { // turn the line into -> words
 		arr[c2++] = strdup(parse);
@@ -174,6 +219,7 @@ void shellInput(char command[], char rootCommand[], char* args[]) {
 		printf("%s|", args[z]);
 	}
 	printf("\n");
+	*/
 
 	// to generate the root command
 	for (int i=0; i < MAX_ARR_LEN; i++) {
@@ -183,20 +229,23 @@ void shellInput(char command[], char rootCommand[], char* args[]) {
 			break;
 		}
 		rootCommand[i] = chr;
-
 	}
 
 }
 
 
 int main() {
-	printf("[!] Switched to UNIX Shell.\n\n");
+	printf("\033[H\033[J"); // clears the console
+	printf("\033[48;5;57m"); // sets foreground and/or background to custom colors
+	printf("[!] Switched to ");
+	printf("ARMSH\n\n");
+	printf("\033[0m");	   // reset color to default
 
 	while (1)
 	{	
 		char command[MAX_ARR_LEN]; // contains one giant line of the command input by the user. This is parsed soon after.
 		char rootCommand[MAX_ARR_LEN]; // basically the first word of the command like echo, ls, etc
-		char *args[MAX_ARR_LEN]; // contains the arguments of the command in an array of strings which excludes the root command
+		char args[MAX_ARR_LEN][MAX_ARR_LEN]; // contains the arguments of the command in an array of strings which excludes the root command
 
 		shellPrompt(); // prompt for the shell
 		shellInput(command, rootCommand, args); // gets the input for the shell
@@ -210,6 +259,10 @@ int main() {
 
 	return 0;
 }
+
+
+
+/* Functions related to the working of INTERNAL commands */
 
 
 char* findFlagInCommand(char command[], char* secondWord) {
@@ -285,9 +338,7 @@ char* getContent(char command[], char* content, int containsFlag) {
 		}
 	}
 
-
 	return content;
-
 }
 
 
