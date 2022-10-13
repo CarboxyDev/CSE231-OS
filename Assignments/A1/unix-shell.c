@@ -305,7 +305,7 @@ void cd(char command[], char rootCommand[]) {
 
 	}
 	else if (success == -1) { // failure
-		printf("Error: Could not cd to that directory!\n");
+		perror("Error");
 	}
 
 
