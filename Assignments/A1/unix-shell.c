@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <limits.h>
 
-#define DEBUG 0
+#define DEBUG 1
 #define MAX_ARR_LEN 100
 
 // Internal commands -> cd echo pwd 
@@ -74,7 +74,7 @@ void checkForBasicCommand(char command[]) {
 	}
 }
 
-void checkForInternalCommand(char command[], char rootCommand[], char *args[]) {
+void checkForInternalCommand(char command[], char rootCommand[]) {
 
 	if (strcmp(rootCommand, "echo") == 0) {
 		echo(command, rootCommand);
@@ -161,7 +161,19 @@ void shellInput(char command[], char rootCommand[], char* args[]) {
 		args[x] = arr[x];
 	}
 
+
+
 	args[c2] = NULL; // end the arguments list with a NULL terminator
+
+	printf("ARGS -> ");
+	for (int z = 0; z < MAX_ARR_LEN; z++) {
+		if (args[z] == NULL)
+		{
+			break;
+		}
+		printf("%s|", args[z]);
+	}
+	printf("\n");
 
 	// to generate the root command
 	for (int i=0; i < MAX_ARR_LEN; i++) {
@@ -182,18 +194,18 @@ int main() {
 
 	while (1)
 	{	
-		char command[MAX_ARR_LEN];
+		char command[MAX_ARR_LEN]; // contains one giant line of the command input by the user. This is parsed soon after.
 		char rootCommand[MAX_ARR_LEN]; // basically the first word of the command like echo, ls, etc
-		char *args[MAX_ARR_LEN];
+		char *args[MAX_ARR_LEN]; // contains the arguments of the command in an array of strings which excludes the root command
 
 		shellPrompt(); // prompt for the shell
 		shellInput(command, rootCommand, args); // gets the input for the shell
 
-		debug(command, rootCommand, args); // For debugging purposes
+		debug(command, rootCommand, args); // For debugging purposes. #define DEBUG sets the debug mode for 0/1
 
 		checkForBasicCommand(command); // check and run commands like exit, clear
-		checkForInternalCommand(command, rootCommand, args);
-		checkForExternalCommand(command, rootCommand, args);
+		checkForInternalCommand(command, rootCommand); // check for internal commands like echo, pwd
+		checkForExternalCommand(command, rootCommand, args); // check for external commands like ls, cat
 	}
 
 	return 0;
