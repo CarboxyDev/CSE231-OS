@@ -14,7 +14,7 @@ void echo(char command[], char rootCommand[]);
 void cd(char command[], char rootCommand[]);
 void pwd(char command[], char rootCommand[]);
 
-void runExternalCommand(char command[], char rootCommand[]) {
+void runExternalCommand(char command[], char rootCommand[], char* args[]) {
 	printf("[!] External command %s found\n", rootCommand);
 
 	pid_t forkType = fork();
@@ -23,9 +23,13 @@ void runExternalCommand(char command[], char rootCommand[]) {
 		printf("Error: Failed to run this external command due to a forking error.");
 	}
 	else if (forkType == 0) { // for child process
+		printf("child process...");
+
 		char binPath[MAX_ARR_LEN] = "cmdbin/";
 		strcat(binPath, rootCommand);
-		int execBinary = execl(binPath, "arg1", "arg2", NULL);
+
+
+		int execBin = execv(binPath, args);
 		exit(0);
 
 	}
