@@ -14,6 +14,31 @@ void echo(char command[], char rootCommand[]);
 void cd(char command[], char rootCommand[]);
 void pwd(char command[], char rootCommand[]);
 
+void runExternalCommand(char command[], char rootCommand[]) {
+	printf("[!] External command %s found\n", rootCommand);
+
+	pid_t forkType = fork();
+
+	if (forkType == -1) {
+		printf("Error: Failed to run this external command due to a forking error.");
+	}
+	else if (forkType == 0) { // for child process
+		char binPath[MAX_ARR_LEN] = "cmdbin/";
+		strcat(binPath, rootCommand);
+		int execBinary = execl(binPath, "arg1", "arg2", NULL);
+		exit(0);
+
+	}
+	else { // for parent process
+		wait(NULL);
+	} 
+
+
+
+
+}
+
+
 
 void debug(char command[], char rootCommand[], char *args[]) {
 	if (DEBUG) {
@@ -57,9 +82,16 @@ void checkForInternalCommand(char command[], char rootCommand[], char *args[]) {
 	else if (strcmp(rootCommand, "cd") == 0) {
 		cd(command, rootCommand);
 	}
-
-
 }
+
+void checkForExternalCommand(char command[], char rootCommand[]) {
+
+	if (strcmp(rootCommand, "cat") == 0 || strcmp(rootCommand, "ls") == 0 || strcmp(rootCommand, "date") == 0 || strcmp(rootCommand, "rm") == 0 || strcmp(rootCommand, "mkdir") == 0) {
+		runExternalCommand(command, rootCommand);
+	}
+}
+
+
 
 void shellPrompt() {
 	char* user = getenv("USER");
@@ -107,6 +139,7 @@ void shellInput(char command[], char rootCommand[], char* args[]) {
 			break;
 		}
 	};
+
 
 	if (c == 1) { // executes when no command was written
 		return;
@@ -157,6 +190,7 @@ int main() {
 
 		checkForBasicCommand(command); // check and run commands like exit, clear
 		checkForInternalCommand(command, rootCommand, args);
+		checkForExternalCommand(command, rootCommand);
 	}
 
 	return 0;
@@ -231,8 +265,7 @@ char* getContent(char command[], char* content, int containsFlag) {
 	}
 
 	if (containsFlag) {
-		for (int i = 0; i < MAX_ARR_LEN; i++)
-		{
+		for (int i = 0; i < MAX_ARR_LEN; i++) {
 			char chr = command[i];
 			if (chr == '\0' || chr == '\n') {
 				content[x] = '\0';
@@ -305,7 +338,7 @@ void cd(char command[], char rootCommand[]) {
 
 	}
 	else if (success == -1) { // failure
-		perror("Error");
+		perror("Error"); // print the error
 	}
 
 
