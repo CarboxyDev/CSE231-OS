@@ -212,19 +212,6 @@ int main() {
 }
 
 
-int getWordCount(char *line) {
-	int wordCount = 1;
-	for (int i = 0; i < strlen(line); i++)
-	{
-		if (line[i] == 32 && i != 0)
-		{
-			wordCount++;
-		}
-	}
-	return wordCount;
-}
-
-
 char* findFlagInCommand(char command[], char* secondWord) {
 	// check the second word and see if it is a flag
 	int whitespaceCount = 0;
