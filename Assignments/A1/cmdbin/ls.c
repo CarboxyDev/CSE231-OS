@@ -7,14 +7,13 @@
 
 
 int main(int argc, char* argv[]) {
-    printf("Execute ls.c\n");
+    //printf("Execute ls.c\n");
 
     if (argc == 0 || ((argc == 1) && (strcmp(argv[0],"-a") == 0 || strcmp(argv[0], "-l") == 0))) {
         char currentDir[PATH_MAX];
-        printf("Args -> %d\n", argc);
+        //printf("Args -> %d\n", argc);
 
         if (getcwd(currentDir, sizeof(currentDir)) != NULL) {
-            printf("Dir exists!\n");
             struct dirent *dir;
             DIR *dirNav = opendir(currentDir);
             if (dirNav == 0) {
@@ -27,19 +26,30 @@ int main(int argc, char* argv[]) {
                 if (argc == 1) { // this means that a flag exists like -a / -l
                     if (strcmp(argv[0], "-a") != 0) { // -a flag is NOT chosen 
                         if (dir->d_name[0] == '.') {
+                            dir = readdir(dirNav);
                             continue; // basically skip the dotfiles/hidden files
                         } 
                         
                     }
-                    printf("%s\t", dir->d_name); // print the dir name
+                    printf("%s   ", dir->d_name); // print the dir name
 
                     if (strcmp(argv[0],"-l") == 0) { // -l flag is chosen
                         printf("\n");
                     }
                 }
+                else if (argc == 0) {
+                    if (dir->d_name[0] == '.') {
+                        dir = readdir(dirNav);
+                        continue; // skip the dotfiles/hidden 
+                    }
+                    
+                    printf("%s   ", dir->d_name); // print the dir name
+                }
 
                 dir = readdir(dirNav);
+
             }
+            printf("\n");
 
         }
     }
