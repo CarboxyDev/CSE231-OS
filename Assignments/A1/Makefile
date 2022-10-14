@@ -4,7 +4,7 @@ BINPATH=./cmdbin/
 all: unix-shell.o bin
 
 unix-shell.o: unix-shell.c
-	$(CC) -o unix-shell unix-shell.c
+	$(CC) -o unix-shell unix-shell.c -pthread
 
 bin: cat.o ls.o date.o mkdir.o rm.o
 

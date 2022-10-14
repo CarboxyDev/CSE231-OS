@@ -7,13 +7,14 @@
 
 
 int main(int argc, char* argv[]) {
-    //printf("Execute ls.c\n");
+    //printf("Execute ls\n");
+    //todo: implement 2 edgecases
 
     if (argc == 0 || ((argc == 1) && (strcmp(argv[0],"-a") == 0 || strcmp(argv[0], "-l") == 0))) {
         char currentDir[PATH_MAX];
-        //printf("Args -> %d\n", argc);
 
         if (getcwd(currentDir, sizeof(currentDir)) != NULL) {
+            //printf("Current working directory -> %s\n", currentDir);
             struct dirent *dir;
             DIR *dirNav = opendir(currentDir);
             if (dirNav == 0) {
@@ -53,6 +54,8 @@ int main(int argc, char* argv[]) {
 
         }
     }
+
+
 
 
 }

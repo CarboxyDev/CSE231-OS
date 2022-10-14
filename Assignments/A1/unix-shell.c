@@ -11,6 +11,11 @@
 // Internal commands -> cd echo pwd 
 // External commands -> ls cat date rm mkdir
 
+char fullPathToBinaries[PATH_MAX];
+
+
+
+
 void echo(char command[], char rootCommand[]);
 void cd(char command[], char rootCommand[]);
 void pwd(char command[], char rootCommand[]);
@@ -24,13 +29,15 @@ void runExternalCommand(char command[], char rootCommand[], char* args[]) {
 		printf("Error: Failed to run this external command due to a forking error.");
 	}
 	else if (forkType == 0) { // for child process
-
-		char binPath[MAX_ARR_LEN] = "cmdbin/";
+		char binPath[PATH_MAX];
+		strcpy(binPath, fullPathToBinaries);
 		strcat(binPath, rootCommand);
+		//printf("Path to bin: %s\n", binPath);
 
 		int execBin = execv(binPath, args);
 
 		exit(0);
+
 
 	}
 	else { // for parent process
@@ -207,10 +214,14 @@ int checkForValidCommand(char rootCommand[]) {
 
 int main() {
 	printf("\033[H\033[J"); // clears the console
-	printf("\033[48;5;105m"); // sets foreground and/or background to custom colors
+	printf("\033[48;5;62m"); // sets foreground and/or background to custom colors
 	printf("[!] Switched to ");
 	printf("ARMSH \n\n");
 	printf("\033[0m");	   // reset color to default
+
+	if (getcwd(fullPathToBinaries, sizeof(fullPathToBinaries)) != NULL) {
+		strcat(fullPathToBinaries, "/cmdbin/");
+	};
 
 	while (1)
 	{	
