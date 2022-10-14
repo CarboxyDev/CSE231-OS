@@ -16,7 +16,7 @@ void cd(char command[], char rootCommand[]);
 void pwd(char command[], char rootCommand[]);
 
 void runExternalCommand(char command[], char rootCommand[], char* args[]) {
-	printf("[!] External command %s found\n", rootCommand);
+	//printf("[!] External command %s found\n", rootCommand);
 
 	pid_t forkType = fork();
 
@@ -28,7 +28,7 @@ void runExternalCommand(char command[], char rootCommand[], char* args[]) {
 		char binPath[MAX_ARR_LEN] = "cmdbin/";
 		strcat(binPath, rootCommand);
 
-		int execBin = execl(binPath, "arg1",NULL);
+		int execBin = execv(binPath, args);
 
 		exit(0);
 
@@ -126,7 +126,7 @@ void shellPrompt() {
 			strcpy(pwdLastDir, checkedToken);
 		}
 	}
-	printf("\033[0;33m"); // turn color to custom co;or
+	printf("\033[38;5;39m"); // turn color to custom color
 	printf("%s", user); // print the username in custom color
 	printf("\033[97m"); // reset color to default
 	printf(" %s $ ", pwdLastDir);
