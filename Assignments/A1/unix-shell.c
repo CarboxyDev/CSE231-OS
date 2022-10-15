@@ -11,14 +11,14 @@
 // Internal commands -> cd echo pwd 
 // External commands -> ls cat date rm mkdir
 
+
 char fullPathToBinaries[PATH_MAX];
-
-
 
 
 void echo(char command[], char rootCommand[]);
 void cd(char command[], char rootCommand[]);
 void pwd(char command[], char rootCommand[]);
+
 
 void runExternalCommand(char command[], char rootCommand[], char* args[]) {
 	//printf("[!] External command %s found\n", rootCommand);
@@ -47,7 +47,6 @@ void runExternalCommand(char command[], char rootCommand[], char* args[]) {
 }
 
 
-
 void debug(char command[], char rootCommand[], char* args[]) {
 	if (DEBUG) {
 		printf("[ROOT] %s\n", rootCommand);
@@ -66,8 +65,6 @@ void debug(char command[], char rootCommand[], char* args[]) {
 }
 
 
-	
-
 void checkForBasicCommand(char command[]) {
 
 	if (strcmp(command, "clear") == 0) {
@@ -80,6 +77,7 @@ void checkForBasicCommand(char command[]) {
 	else {
 	}
 }
+
 
 void checkForInternalCommand(char command[], char rootCommand[]) {
 
@@ -96,6 +94,7 @@ void checkForInternalCommand(char command[], char rootCommand[]) {
 	}
 }
 
+
 void checkForExternalCommand(char command[], char rootCommand[], char* args[]) {
 	if (strcmp(rootCommand, "cat") == 0 || strcmp(rootCommand, "ls") == 0 || strcmp(rootCommand, "date") == 0 || strcmp(rootCommand, "rm") == 0 || strcmp(rootCommand, "mkdir") == 0) {
 		runExternalCommand(command, rootCommand, args);
@@ -103,7 +102,6 @@ void checkForExternalCommand(char command[], char rootCommand[], char* args[]) {
 	else {
 	}
 }
-
 
 
 void shellPrompt() {
@@ -248,9 +246,7 @@ int main() {
 }
 
 
-
 /* Functions related to the working of INTERNAL commands */
-
 
 char* findFlagInCommand(char command[], char* secondWord) {
 	// check the second word and see if it is a flag
@@ -364,6 +360,7 @@ void echo(char command[], char rootCommand[]) {
 	};
 
 }
+
 
 void cd(char command[], char rootCommand[]) {
 	char sw[MAX_ARR_LEN];
