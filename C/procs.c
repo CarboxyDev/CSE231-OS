@@ -2,8 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#define unsigned long int lu
-
+typedef unsigned long int lu;
 
 lu factorial(lu n) {
     if (n == 1 ){
@@ -16,7 +15,7 @@ lu factorial(lu n) {
 
 
 int main() {
-    printf("%lu\n", factorial(3));
+
     int f = fork();
 
     if (f == -1) { // fork fail
@@ -24,7 +23,6 @@ int main() {
     }
     else if (f == 0) { // child process 
         printf("[Execute] Child proc %d\n", getpid());
-        sleep(2);
     }
     else if (f > 0) { // parent process
         printf("[WAIT] Parent proc %d\n", f);
