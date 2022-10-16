@@ -12,9 +12,12 @@ int main() {
     }
     else if (f == 0) { // child process 
         printf("[Execute] Child proc %d\n", getpid());
+        sleep(2);
     }
     else if (f > 0) { // parent process
-        printf("[Execute] Parent proc %d\n", getpid());
+        printf("[WAIT] Parent proc %d\n", f);
+        wait(NULL);
+        printf("[EXECUTE] Parent proc %d\n", f);
     }
 
 
