@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+
 typedef unsigned long int lu;
 
 lu factorial(lu n) {
@@ -23,10 +24,12 @@ int main() {
     }
     else if (f == 0) { // child process 
         printf("[Execute] Child proc %d\n", getpid());
+        int x = random();
+        printf("%d\n", x);
     }
     else if (f > 0) { // parent process
-        printf("[WAIT] Parent proc %d\n", f);
-        wait(NULL);
+        //printf("[WAIT] Parent proc %d\n", f);
+        //wait(NULL);
         printf("[EXECUTE] Parent proc %d\n", f);
     }
 
