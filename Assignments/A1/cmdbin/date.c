@@ -1,3 +1,11 @@
+/*
+ *   This file will be used to make a binary ("date") for the unix-shell program
+ *   The created binary will allow the shell to use the date command (following the POSIX standard while missing many common features)
+ *   The date command will be used to fetch the user's date on their Operating System
+ *   Supported Flags: -u, -R
+ */
+
+
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
