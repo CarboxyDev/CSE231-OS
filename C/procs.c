@@ -2,9 +2,21 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#define unsigned long int lu
+
+
+lu factorial(lu n) {
+    if (n == 1 ){
+        return 1;
+    }
+    return n * factorial(n - 1);
+}
+
+
+
 
 int main() {
-
+    printf("%lu\n", factorial(3));
     int f = fork();
 
     if (f == -1) { // fork fail
