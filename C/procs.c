@@ -24,8 +24,13 @@ int main() {
     }
     else if (f == 0) { // child process 
         printf("[Execute] Child proc %d\n", getpid());
-        int x = random();
-        printf("%d\n", x);
+        int x = arc4random();
+        
+        if (x > 0) {
+            
+        }
+
+
     }
     else if (f > 0) { // parent process
         //printf("[WAIT] Parent proc %d\n", f);
