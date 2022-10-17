@@ -11,6 +11,14 @@ void* threadFunction(){
     FILE* fptr;
     fptr = fopen("mock.txt", "r");
 
+    while (1) {
+        char chr = fgetc(fptr);
+        if (chr == EOF) {
+            break;
+        }
+        printf("%c", chr);
+    }
+
 
 
     return NULL;
