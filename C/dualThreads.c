@@ -4,8 +4,6 @@
 #include <pthread.h>
 
 
-
-
 void* threadFunction(){
 
     FILE* fptr;

@@ -4,7 +4,5 @@
 
 
 int main() {
-   //struct task_struct *proc = current;
 
-    //printf("%ld", p->state);
 }
