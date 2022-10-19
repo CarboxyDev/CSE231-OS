@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <limits.h>
 
+
 #define DEBUG 0
 #define MAX_ARR_LEN 1000
 
@@ -21,8 +22,6 @@ void pwd(char command[], char rootCommand[]);
 
 
 void runExternalCommand(char command[], char rootCommand[], char* args[]) {
-	//printf("[!] External command %s found\n", rootCommand);
-
 	pid_t forkType = fork();
 
 	if (forkType == -1) {
@@ -32,13 +31,10 @@ void runExternalCommand(char command[], char rootCommand[], char* args[]) {
 		char binPath[PATH_MAX];
 		strcpy(binPath, fullPathToBinaries);
 		strcat(binPath, rootCommand);
-		//printf("Path to bin: %s\n", binPath);
 
 		int execBin = execv(binPath, args);
 
 		exit(0);
-
-
 	}
 	else { // for parent process
 		wait(NULL);
@@ -54,19 +50,17 @@ void debug(char command[], char rootCommand[], char* args[]) {
 		printf("[ARGS] ");
 		
 		for (int i = 0; i < 10; i++) {
-			if (args[i] == NULL) { // reached the end of arguments list
+			if (args[i] == NULL) { 
 				break;
 			}
 			printf("%s,", args[i]);
 		}
 		printf("\n");
-		
 	}
 }
 
 
 void checkForBasicCommand(char command[]) {
-
 	if (strcmp(command, "clear") == 0) {
 		printf("\033[H\033[J"); // clears the console
 	}
@@ -74,13 +68,13 @@ void checkForBasicCommand(char command[]) {
 		printf("\n");
 		exit(0);
 	}
-	else {
+	else if(strcmp(command, "dog") == 0) {
+		printf("woof\n");
 	}
 }
 
 
 void checkForInternalCommand(char command[], char rootCommand[]) {
-
 	if (strcmp(rootCommand, "echo") == 0) {
 		echo(command, rootCommand);
 	}
@@ -90,8 +84,6 @@ void checkForInternalCommand(char command[], char rootCommand[]) {
 	else if (strcmp(rootCommand, "cd") == 0) {
 		cd(command, rootCommand);
 	}
-	else {
-	}
 }
 
 
@@ -99,12 +91,11 @@ void checkForExternalCommand(char command[], char rootCommand[], char* args[]) {
 	if (strcmp(rootCommand, "cat") == 0 || strcmp(rootCommand, "ls") == 0 || strcmp(rootCommand, "date") == 0 || strcmp(rootCommand, "rm") == 0 || strcmp(rootCommand, "mkdir") == 0) {
 		runExternalCommand(command, rootCommand, args);
 	}
-	else {
-	}
 }
 
 
 void shellPrompt() {
+	//todo: fix any bugs with the path name in the prompt
 	char* user = getenv("USER");
 	char currentDir[PATH_MAX];
 	char pwdLastDir[MAX_ARR_LEN];
@@ -195,7 +186,7 @@ void shellInput(char command[], char rootCommand[], char* args[]) {
 
 
 int checkForValidCommand(char rootCommand[]) {
-	if (strcmp(rootCommand,"clear") == 0 || strcmp(rootCommand,"exit") == 0 ) {
+	if (strcmp(rootCommand, "clear") == 0 || strcmp(rootCommand, "exit") == 0 || strcmp(rootCommand, "dog") == 0) {
 		return 1;
 	}
 	else if (strcmp(rootCommand, "echo") == 0 || strcmp(rootCommand, "cd") == 0 || strcmp(rootCommand, "pwd") == 0) {
@@ -221,8 +212,7 @@ int main() {
 		strcat(fullPathToBinaries, "/cmdbin/");
 	};
 
-	while (1)
-	{	
+	while (1) {	
 		char command[MAX_ARR_LEN]; // contains one giant line of the command input by the user. This is parsed soon after.
 		char rootCommand[MAX_ARR_LEN]; // basically the first word of the command like echo, ls, etc
 		char* args[MAX_ARR_LEN]; // contains the arguments of the command in an array of strings which excludes the root command
@@ -241,7 +231,6 @@ int main() {
 		}
 	
 	}
-
 	return 0;
 }
 
@@ -272,14 +261,12 @@ char* findFlagInCommand(char command[], char* secondWord) {
 		}
 
 	}
-
 	return secondWord;
 
 }
 
 
 char* getContent(char command[], char* content, int containsFlag) {
-
 	int whitespaceCount = 0;
 	int x = 0;
 	if (!containsFlag) {
@@ -326,9 +313,6 @@ char* getContent(char command[], char* content, int containsFlag) {
 
 
 void echo(char command[], char rootCommand[]) {
-
-	//todo: handle quotations in the echo message
-
 	char sw[MAX_ARR_LEN];
 	char secondWord[MAX_ARR_LEN]; // second word is basically the flag
 	char* secondWordPtr = findFlagInCommand(command, sw);
@@ -368,17 +352,10 @@ void cd(char command[], char rootCommand[]) {
 	char *secondWordPtr = findFlagInCommand(command, sw);
 	strcpy(secondWord, secondWordPtr);
 
-	// the secondWord variable contains the directory to which the person wants to cd to
-
 	int success = chdir(secondWord);
-	if (success == 0) { // success
-
-	}
-	else if (success == -1) { // failure
+	if (success == -1) { // failure
 		perror("Error"); // print the error
 	}
-
-
 }
 
 
@@ -388,5 +365,4 @@ void pwd(char command[], char rootCommand[]) {
 	if (getcwd(currentDir, sizeof(currentDir)) != NULL) {
 		printf("%s\n", currentDir);
 	}
-
 };

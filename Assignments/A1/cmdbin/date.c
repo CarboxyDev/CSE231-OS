@@ -12,9 +12,7 @@
 
 
 int main(int argc, char* argv[]) {
-
-
-    if (argc == 0) {
+    if (argc == 0) { // when no arguments or flags are provided
         char formatTime[1000];
         time_t currentTime;
         time(&currentTime);
@@ -22,8 +20,8 @@ int main(int argc, char* argv[]) {
 
         printf("Local Time: %s", formatTime);
     }
-    else if (argc == 1 && strcmp(argv[0], "-u") == 0) {
-        // -u flag is encountered
+
+    else if (argc == 1 && strcmp(argv[0], "-u") == 0) { //when -u flag is encountered
         char utcTime[1000];
         time_t utc;
 
@@ -31,7 +29,6 @@ int main(int argc, char* argv[]) {
         time(&utc);
         t = gmtime(&utc);
         printf("UTC Time: %s", asctime(t));
-
     }
 
     else if (argc == 1 && strcmp(argv[0],"-R") == 0) {
