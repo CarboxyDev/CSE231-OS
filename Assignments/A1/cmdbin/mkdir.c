@@ -3,11 +3,13 @@
  *  The created binary will allow the shell to use the mkdir command (following the POSIX standard while missing many common features)
  *  The mkdir command will generally create a new directory for the user
  *  Supported Flags: TBD
+ *  Supported Edge cases: TBD
  */
-
 
 #include <stdio.h>
 
 
 int main(int argc, char *argv[]) {
+
+    return 0;
 }

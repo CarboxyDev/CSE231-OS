@@ -1,10 +1,10 @@
 /*
- *   This file will be used to make a binary ("ls") for the unix-shell program
- *   The created binary will allow the shell to use the ls command (following the POSIX standard while missing many common features)
- *   The ls command is primarily used to view the contents of the shell's current working directory
- *   Supported Flags: -a, -l
+ *  This file will be used to make a binary ("ls") for the unix-shell program
+ *  The created binary will allow the shell to use the ls command (following the POSIX standard while missing many common features)
+ *  The ls command is primarily used to view the contents of the shell's current working directory
+ *  Supported Flags: -a, -l
+ *  Supported Edge cases: TBA
  */
-
 
 #include <stdio.h>
 #include <dirent.h>
@@ -62,5 +62,7 @@ int main(int argc, char* argv[]) {
 
         }
     }
+
+    return 0;
 
 }
