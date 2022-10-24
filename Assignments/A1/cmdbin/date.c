@@ -20,7 +20,6 @@ int main(int argc, char* argv[]) {
 
         printf("Local Time: %s", formatTime);
     }
-
     else if (argc == 1 && strcmp(argv[0], "-u") == 0) { //when -u flag is encountered
         char utcTime[1000];
         time_t utc;
@@ -30,7 +29,6 @@ int main(int argc, char* argv[]) {
         t = gmtime(&utc);
         printf("UTC Time: %s", asctime(t));
     }
-
     else if (argc == 1 && strcmp(argv[0],"-R") == 0) {
         // -R flag is encountered. Print date/time in RFC 5322 format
         char formatTime[1000];
@@ -41,6 +39,11 @@ int main(int argc, char* argv[]) {
         strtok(formatTime, "\n"); // remove the trailing newline character from the localdate
         printf("Local Time: %s +0530\n", formatTime);
     }
+
+    else {
+        printf("date: Invalid usage\n");
+    }
+
 
     return 0;
 

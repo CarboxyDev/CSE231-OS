@@ -36,13 +36,10 @@ int main(int argc, char* argv[]) {
             if (file == NULL) {
                 printf("cat: Error: Invalid file name provided\n");
             }
-            else
-            {
-                while (1)
-                {
+            else {
+                while (1) {
                     char chr = fgetc(file);
-                    if (chr == EOF)
-                    {
+                    if (chr == EOF) {
                         break;
                     }
                     printf("%c", chr);

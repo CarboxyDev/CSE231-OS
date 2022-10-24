@@ -7,9 +7,22 @@
  */
 
 #include <stdio.h>
+#include <unistd.h>
+#include <sys/stat.h>
 
 
 int main(int argc, char *argv[]) {
+
+    if (argc == 1) { // create a single directory
+        struct stat s;
+        if (stat(argv[0], &s) == -1) { // directory does not already exist
+            mkdir(argv[0], 0700); // finally create the directory
+        }
+        else { // directory already exists
+            printf("mkdir: Directory already exists\n");
+        }
+    }
+
 
     return 0;
 }
