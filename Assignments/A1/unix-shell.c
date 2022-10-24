@@ -127,9 +127,9 @@ void shellPrompt() {
 
 	// special thanks to https://stackoverflow.com/a/33206814/11414984 for the help on ANSI escape code
 
-	printf("\033[38;5;39m"); // turn color to custom color
+	printf("\033[38;5;7m"); // turn color to custom color
 	printf("%s", user); // print the username in custom color 
-	printf("\033[38;5;214m"); // turn color to custom color
+	printf("\033[38;5;183m"); // turn color to custom color
 	printf(" %s ", pwdLastDir); // print the current working directory in custom color
 	printf("\033[97m"); // reset color to default
 	printf("$ ");
