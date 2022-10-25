@@ -3,12 +3,13 @@
  *  The created binary will allow the shell to use the cat command (following the POSIX standard while missing many common features)
  *  The cat command is used to view the contents of a file (or multiple files, concatenated) specified by the user
  *  Supported Flags: -b, -n
- *  Supported Edge cases: 1. Disallow using cat on folders  2. Handle invalid file names
+ *  Supported Edge cases: 1. Handle using cat command on directories (not illegal!)  2. Handle invalid file names
  */
 
 
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 #include <sys/stat.h>
 
 
@@ -23,10 +24,13 @@ int checkFile(char filePath[]) {
 
 int main(int argc, char* argv[]) {
     if (argc == 0) { // Not sure if this is the correct way to handle this case as the mac terminal just seems to hang whenever cat is called with no args
-        printf("Error: You need to give some file(s) as argument\n");
+        printf("cat: You need to give some file as argument\n");
     }
     else if (argc == 1) { // Handle a single file
-        if (!checkFile(argv[0])) {
+        if (access(argv[0], F_OK) != 0) { // file does not exist
+            printf("cat: No such file or directory\n");
+        }
+        else if (!checkFile(argv[0])) {
             printf("cat: %s is a directory\n", argv[0]);
         }
         else {
@@ -51,8 +55,11 @@ int main(int argc, char* argv[]) {
 
     }
     else if (argc >= 2 && strcmp(argv[0], "-n") == 0) {
-        if (!checkFile(argv[1])) {
-            printf("cat: %s is a directory\n", argv[0]);
+        if (access(argv[1], F_OK) != 0) { // file does not exist
+            printf("cat: No such file or directory\n");
+        }
+        else if (!checkFile(argv[1])) {
+            printf("cat: %s is a directory\n", argv[1]);
         }
         else {
             FILE *file;
@@ -73,8 +80,11 @@ int main(int argc, char* argv[]) {
         }
     }
     else if (argc >= 2 && strcmp(argv[0], "-b") == 0) {
-        if (!checkFile(argv[1])) {
-            printf("cat: %s is a directory\n", argv[0]);
+        if (access(argv[1], F_OK) != 0) { // file does not exist
+            printf("cat: No such file or directory\n");
+        }
+        else if (!checkFile(argv[1])) {
+            printf("cat: %s is a directory\n", argv[1]);
         }
         else {
             FILE *file;
@@ -94,7 +104,6 @@ int main(int argc, char* argv[]) {
                         printf(" %d %s", lineNumber, lineBuffer);
                         lineNumber++;
                     }
-
                 }
             }
             printf("\n");
