@@ -61,6 +61,28 @@ int main(int argc, char *argv[]) {
             }
         }
     }
+    else if (argc == 2 && strcmp(argv[0], "-i") == 0) { // -i flag (seek confirmation before proceeding)
+        if (access(argv[1], F_OK) != 0) { // file does not exist
+            printf("rm: No such file\n");
+        }
+        else if (!checkFile(argv[1])) {
+            printf("rm: %s is a directory\n", argv[1]);
+        }
+        else {
+            printf("Remove %s? [y/n]", argv[1]);
+            char choice[100];
+            scanf("%s", choice);
+
+            if (strcmp(choice,"y") == 0 || strcmp(choice, "yes") == 0) {
+                if (remove(argv[1]) == 0) { // successful remove operation
+                }
+                else {
+                    printf("rm: Unable to remove the file\n");
+                }
+            }
+
+        }
+    }
     return 0;
 
 }
