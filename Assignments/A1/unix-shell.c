@@ -202,10 +202,10 @@ int checkForValidCommand(char rootCommand[]) {
 
 int main() {
 	printf("\033[H\033[J"); // clears the console
-	printf("\033[48;5;62m"); // sets foreground and/or background to custom colors
-	printf("[!] Switched to ");
-	printf("ARMSH \n\n");
-	printf("\033[0m");	   // reset color to default
+	printf("\033[48;5;183m"); // sets background to custom color
+	printf("\033[38;5;0m"); // sets foreground to custom color
+	printf("[!] Switched to ARMSH \n\n");
+	printf("\033[0m"); // reset color to default
 
 	if (getcwd(fullPathToBinaries, sizeof(fullPathToBinaries)) != NULL) {
 		strcat(fullPathToBinaries, "/cmdbin/");

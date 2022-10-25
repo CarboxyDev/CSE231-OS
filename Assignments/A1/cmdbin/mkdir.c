@@ -12,7 +12,6 @@
 
 
 int main(int argc, char *argv[]) {
-
     if (argc == 1) { // create a single directory
         struct stat s;
         if (stat(argv[0], &s) == -1) { // directory does not already exist
