@@ -17,7 +17,6 @@
 int main(int argc, char* argv[]) {
     //printf("Execute ls\n");
     //todo: implement 2 edgecases
-
     if (argc == 0 || ((argc == 1) && (strcmp(argv[0],"-a") == 0 || strcmp(argv[0], "-l") == 0))) {
         char currentDir[PATH_MAX];
 

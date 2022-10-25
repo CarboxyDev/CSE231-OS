@@ -8,6 +8,7 @@
 
 
 #include <stdio.h>
+#include <string.h>
 #include <sys/stat.h>
 
 
@@ -25,7 +26,6 @@ int main(int argc, char* argv[]) {
         printf("Error: You need to give some file(s) as argument\n");
     }
     else if (argc == 1) { // Handle a single file
-        
         if (!checkFile(argv[0])) {
             printf("cat: %s is a directory\n", argv[0]);
         }
@@ -50,6 +50,32 @@ int main(int argc, char* argv[]) {
         }
 
     }
-    
+    else if (argc >= 2 && strcmp(argv[0], "-n") == 0) {
+        if (!checkFile(argv[1])) {
+            printf("cat: %s is a directory\n", argv[0]);
+        }
+        else {
+            FILE *file;
+            file = fopen(argv[1], "r");
+            char lineBuffer[512];
+
+            if (file == NULL) {
+                printf("cat: Error: Invalid file name provided\n");
+            }
+            else {
+                int lineNumber = 1;
+                while (fgets(lineBuffer, 512, file) != 0) {
+                    printf(" %d %s", lineNumber, lineBuffer);
+                    lineNumber++;
+                }
+            }
+            printf("\n");
+        }
+    }
+    else if (argc >= 2 && strcmp(argv[0], "-b") == 0) {
+        
+    }
+
+
     return 0;
 }
