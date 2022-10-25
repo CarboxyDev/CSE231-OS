@@ -1,3 +1,14 @@
+/*
+ *  The unix-shell program is a UNIX-based command line shell designed to be as POSIX-compliant for whatever implementations it has
+ *  This file contains the main source code for the unix-shell program
+ *  The created binary will allow the user to run this UNIX-based shell in the terminal
+ * 
+ * 	@name ARMSH (Short for Arman Shell)
+ *	@author Arman
+ *  @version 0.1.1
+ * 	@since 2022-10-13 19:14:17 +0000
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

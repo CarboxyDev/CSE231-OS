@@ -3,7 +3,12 @@
  *  The created binary will allow the shell to use the cat command (following the POSIX standard while missing many common features)
  *  The cat command is used to view the contents of a file (or multiple files, concatenated) specified by the user
  *  Supported Flags: -b, -n
- *  Supported Edge cases: 1. Handle using cat command on directories (not illegal!)  2. Handle invalid file names
+ *  Supported Edge cases:
+ *      1. Handle using cat command on directories (illegal!)
+ *      2. Handle invalid file names
+ *      3. Handle the case when no argument is given with the command
+ *  
+ *  TODO: Handle multiple files in input
  */
 
 

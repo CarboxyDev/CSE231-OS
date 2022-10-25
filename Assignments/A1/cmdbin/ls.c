@@ -3,8 +3,13 @@
  *  The created binary will allow the shell to use the ls command (following the POSIX standard while missing many common features)
  *  The ls command is primarily used to view the contents of the shell's current working directory
  *  Supported Flags: -a, -l
- *  Supported Edge cases: TBA
+ *  Supported Edge cases:
+ *      1. TBD
+ *      2. TBD
+ * 
+ *  TODO: Implement the edge cases
  */
+
 
 #include <stdio.h>
 #include <dirent.h>
@@ -15,13 +20,10 @@
 
 
 int main(int argc, char* argv[]) {
-    //printf("Execute ls\n");
-    //todo: implement 2 edgecases
     if (argc == 0 || ((argc == 1) && (strcmp(argv[0],"-a") == 0 || strcmp(argv[0], "-l") == 0))) {
         char currentDir[PATH_MAX];
 
         if (getcwd(currentDir, sizeof(currentDir)) != NULL) {
-            //printf("Current working directory -> %s\n", currentDir);
             struct dirent *dir;
             DIR *dirNav = opendir(currentDir);
             if (dirNav == 0) {
@@ -50,12 +52,9 @@ int main(int argc, char* argv[]) {
                         dir = readdir(dirNav);
                         continue; // skip the dotfiles/hidden 
                     }
-                    
                     printf("%s   ", dir->d_name); // print the dir name
                 }
-
                 dir = readdir(dirNav);
-
             }
             printf("\n");
 

@@ -3,8 +3,13 @@
  *  The created binary will allow the shell to use the date command (following the POSIX standard while missing many common features)
  *  The date command will be used to fetch the user's date on their Operating System
  *  Supported Flags: -u, -R
- *  Supported Edge cases: TBA
+ *  Supported Edge cases:
+ *      1. TBD
+ *      2. TBD
+ * 
+ *  TODO: Implement the edge cases
  */
+
 
 #include <stdio.h>
 #include <string.h>
@@ -39,7 +44,6 @@ int main(int argc, char* argv[]) {
         strtok(formatTime, "\n"); // remove the trailing newline character from the localdate
         printf("Local Time: %s +0530\n", formatTime);
     }
-
     else {
         printf("date: Invalid usage\n");
     }
