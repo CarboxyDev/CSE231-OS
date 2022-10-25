@@ -3,7 +3,7 @@
  *  The created binary will allow the shell to use the cat command (following the POSIX standard while missing many common features)
  *  The cat command is used to view the contents of a file (or multiple files, concatenated) specified by the user
  *  Supported Flags: -b, -n
- *  Supported Edge cases: 1. Disallow using cat on folders  2. TBA
+ *  Supported Edge cases: 1. Disallow using cat on folders  2. Handle invalid file names
  */
 
 
@@ -73,7 +73,32 @@ int main(int argc, char* argv[]) {
         }
     }
     else if (argc >= 2 && strcmp(argv[0], "-b") == 0) {
-        
+        if (!checkFile(argv[1])) {
+            printf("cat: %s is a directory\n", argv[0]);
+        }
+        else {
+            FILE *file;
+            file = fopen(argv[1], "r");
+            char lineBuffer[512];
+
+            if (file == NULL) {
+                printf("cat: Error: Invalid file name provided\n");
+            }
+            else {
+                int lineNumber = 1;
+                while (fgets(lineBuffer, 512, file) != 0) {
+                    if (strcmp(lineBuffer, "\n") == 0) { // the line is a blank line
+                        printf("\n");
+                    }
+                    else {
+                        printf(" %d %s", lineNumber, lineBuffer);
+                        lineNumber++;
+                    }
+
+                }
+            }
+            printf("\n");
+        }
     }
 
 
