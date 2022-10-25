@@ -7,7 +7,7 @@
  *      1. Create multiple directories at once
  *      2. TBD
  *  
- *  TODO: Implement the remaining edge case
+ *  TODO: Implement the edge cases
  */
 
 

@@ -5,7 +5,7 @@
  *  Supported Flags: -b, -n
  *  Supported Edge cases:
  *      1. Handle using cat command on directories (illegal!)
- *      2. Handle invalid file names
+ *      2. Handle invalid file names as arguments
  *      3. Handle the case when no argument is given with the command
  *  
  *  TODO: Handle multiple files in input
@@ -28,8 +28,8 @@ int checkFile(char filePath[]) {
 
 
 int main(int argc, char* argv[]) {
-    if (argc == 0) { // Not sure if this is the correct way to handle this case as the mac terminal just seems to hang whenever cat is called with no args
-        printf("cat: You need to give some file as argument\n");
+    if (argc == 0) { 
+        printf("cat: You need to give some file as input\n");
     }
     else if (argc == 1) { // Handle a single file
         if (access(argv[0], F_OK) != 0) { // file does not exist
