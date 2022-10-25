@@ -9,13 +9,7 @@
 #define MAX_ARR_LEN 1000
 
 
-// Internal commands -> cd echo pwd 
-// External commands -> ls cat date rm mkdir
-
-
 char fullPathToBinaries[PATH_MAX];
-
-
 
 
 void echo(char command[], char rootCommand[]);
@@ -124,8 +118,6 @@ void shellPrompt() {
 			strcpy(pwdLastDir, checkedToken);
 		}
 	}
-
-	// special thanks to https://stackoverflow.com/a/33206814/11414984 for the help on ANSI escape code
 
 	printf("\033[38;5;7m"); // turn color to custom color
 	printf("%s", user); // print the username in custom color 
@@ -241,8 +233,6 @@ int main() {
 	return 0;
 }
 
-
-/* Functions related to the working of INTERNAL commands */
 
 char* findFlagInCommand(char command[], char* secondWord) {
 	// check the second word and see if it is a flag

@@ -3,7 +3,7 @@
  *  The created binary will allow the shell to use the mkdir command (following the POSIX standard while missing many common features)
  *  The mkdir command will generally create a new directory for the user
  *  Supported Flags: TBD
- *  Supported Edge cases: TBD
+ *  Supported Edge cases: 1. Create multiple directories at once 2. TBD
  */
 
 #include <stdio.h>
