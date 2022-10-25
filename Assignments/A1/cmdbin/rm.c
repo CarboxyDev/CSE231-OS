@@ -41,11 +41,26 @@ int main(int argc, char *argv[]) {
 
             }
             else {
-                printf("rm: Unable to remove the file");
+                printf("rm: Unable to remove the file\n");
             }
         }
     }
-
+    else if (argc == 2 && strcmp(argv[0], "-v") == 0) { // -v flag (verbose)
+        if (access(argv[1], F_OK) != 0) { // file does not exist
+            printf("rm: No such file\n");
+        }
+        else if (!checkFile(argv[1])) {
+            printf("rm: %s is a directory\n", argv[1]);
+        }
+        else {
+            if (remove(argv[1]) == 0) { // successful remove operation
+                printf("Removed %s\n", argv[1]);
+            }
+            else {
+                printf("rm: Unable to remove the file\n");
+            }
+        }
+    }
     return 0;
 
 }
