@@ -7,7 +7,7 @@
  *      1. Handle using the rm command on directories (illegal!)
  *      2. Handle using invalid file names as arguments
  * 
- *  TODO: Implement the command
+ *  TODO: None
  */
 
 
@@ -80,7 +80,6 @@ int main(int argc, char *argv[]) {
                     printf("rm: Unable to remove the file\n");
                 }
             }
-
         }
     }
     return 0;
