@@ -4,8 +4,8 @@
  *  The ls command is primarily used to view the contents of the shell's current working directory
  *  Supported Flags: -a, -l
  *  Supported Edge cases:
- *      1. TBD
- *      2. TBD
+ *      1. Allow usage of ls on directories relative to the current directory
+ *      2. Handle the case where the ls'd directory does not exist
  * 
  *  TODO: Implement the edge cases
  */
