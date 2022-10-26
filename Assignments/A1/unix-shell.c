@@ -58,15 +58,19 @@ void echo(char command[], char rootCommand[], char *args[]) {
 }
 
 void cd(char command[], char rootCommand[], char *args[]) {
-	char sw[MAX_ARR_LEN];
-	char secondWord[MAX_ARR_LEN]; // second word is basically the flag
-	char *secondWordPtr = findFlagInCommand(command, sw);
-	strcpy(secondWord, secondWordPtr);
-
-	int success = chdir(secondWord);
-	if (success == -1) { // failure
-		perror("Error"); // print the error
+	if (args[0] == NULL) {
+		int changeDir = chdir(getenv("HOME"));
+		if (changeDir == -1) { // failure in changing directory
+			printf("cd: No such directory\n");
+		}
 	}
+	else {
+		int changeDir = chdir(args[0]);
+		if (changeDir == -1) {
+			printf("cd: No such directory\n");
+		}
+	}
+
 }
 
 
