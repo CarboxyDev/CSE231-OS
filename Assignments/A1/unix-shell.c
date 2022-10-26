@@ -243,7 +243,8 @@ void pwd(char command[], char rootCommand[], char *args[]) {
 
 
 void* execThread(void* vargs) {
-	char* argsAsString = (char*) vargs;
+	char* command = (char*) vargs;
+	printf("%s", command);
 	return NULL;
 }
 
@@ -284,7 +285,7 @@ void runExternalCommand(char command[], char rootCommand[], char* args[]) {
 	}
 	else if (executionType == 1) { // Thread based execution
 		printf("[Thread based execution]\n");
-
+		/*
 		char argsAsString[1000];
 
 		int i = 0;
@@ -308,10 +309,10 @@ void runExternalCommand(char command[], char rootCommand[], char* args[]) {
 			};
 
 			i++;
-		}
+		}*/
 
 		pthread_t t;
-		pthread_create(&t, NULL, execThread, (void*) argsAsString);
+		pthread_create(&t, NULL, execThread, (void*) command);
 		pthread_join(t, NULL);
 
 	}
