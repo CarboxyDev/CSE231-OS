@@ -19,8 +19,6 @@
 
 char fullPathToBinaries[PATH_MAX];
 
-char *findFlagInCommand(char command[], char *secondWord);
-
 
 /* INTERNAL COMMANDS START */
 
@@ -283,77 +281,3 @@ int main() {
 	return 0;
 }
 
-
-char* findFlagInCommand(char command[], char* secondWord) {
-	// check the second word and see if it is a flag
-	int whitespaceCount = 0;
-	int x = 0;
-
-	for (int i=0; i < MAX_ARR_LEN; i++) {
-		char chr = command[i];
-		if (chr == '\0' || chr == '\n') {
-			secondWord[x] = '\0';
-			break;
-		}
-		if (chr == ' ') { 
-			whitespaceCount++;
-		}
-		if (whitespaceCount > 1) {
-			secondWord[x] = '\0';
-			break;
-		}
-		if (whitespaceCount == 1 && command[i] != ' ') { // second word is starting now
-			secondWord[x] = command[i];
-			x++;
-		}
-
-	}
-	return secondWord;
-
-}
-
-
-char* getContent(char command[], char* content, int containsFlag) {
-	int whitespaceCount = 0;
-	int x = 0;
-	if (!containsFlag) {
-		for (int i=0; i < MAX_ARR_LEN; i++) {
-			char chr = command[i];
-			if (chr == '\0' || chr == '\n') {
-				content[x] = '\0';
-				break;
-			}
-
-			if (whitespaceCount > 0) {
-				content[x] = chr;
-				x++;
-			}
-			
-			if (chr == ' ') {
-				whitespaceCount++;
-			}
-
-		}
-	}
-
-	if (containsFlag) {
-		for (int i = 0; i < MAX_ARR_LEN; i++) {
-			char chr = command[i];
-			if (chr == '\0' || chr == '\n') {
-				content[x] = '\0';
-				break;
-			}
-
-			if (whitespaceCount > 1) {
-				content[x] = chr;
-				x++;
-			}
-
-			if (chr == ' ') {
-				whitespaceCount++;
-			}
-		}
-	}
-
-	return content;
-}
