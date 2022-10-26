@@ -2,19 +2,23 @@
  *  This file will be used to make a binary ("date") for the unix-shell program
  *  The created binary will allow the shell to use the date command (following the POSIX standard while missing many common features)
  *  The date command will be used to fetch the user's date on their Operating System
- *  Supported Flags: -u, -R
+ *  Supported Flags: -u, -r, -R
  *  Supported Edge cases:
- *      1. Handle cases of invalid usage
- *      2. TBD
+ *      1. Handle cases of invalid usage of date command
+ *      2. Handle case where -r is used on a file that does not exist
+ *      3. Handle case where -r is used without any argument
  * 
- *  TODO: Implement the remaining edge case
+ *  TODO: None
  */
 
 
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
-
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <limits.h>
+#include <unistd.h>
 
 int main(int argc, char* argv[]) {
     if (argc == 0) { // when no arguments or flags are provided
@@ -33,6 +37,26 @@ int main(int argc, char* argv[]) {
         time(&utc);
         t = gmtime(&utc);
         printf("UTC Time: %s", asctime(t));
+    }
+    else if ((argc == 1 || argc == 2) && strcmp(argv[0],"-r") == 0) { // -r flag. Print last modification date of a particular file
+        if (argc == 2) {
+            if (access(argv[1], F_OK) != 0) { // file does not exist
+                printf("date: Specified file does not exist\n");
+                return 0;
+            }
+
+            char filePath[PATH_MAX];
+            strcpy(filePath, argv[1]);
+            struct stat fileInfo;
+            stat(filePath, &fileInfo);
+            char *lmt = ctime(&fileInfo.st_mtime);
+
+            printf("Last modified time for %s: %s", filePath, lmt);
+        }
+        else if (argc == 1){
+            printf("date: Specify a file name along with the -r flag\n");
+        }
+
     }
     else if (argc == 1 && strcmp(argv[0],"-R") == 0) { // -R flag. Print datetime in RFC 5322 format
         char formatTime[1000];
