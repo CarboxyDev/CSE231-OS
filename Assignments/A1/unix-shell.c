@@ -102,7 +102,6 @@ void runExternalCommand(char command[], char rootCommand[], char* args[]) {
 	else { // for parent process
 		wait(NULL);
 	} 
-
 }
 
 
@@ -113,9 +112,6 @@ void checkForBasicCommand(char command[]) {
 	else if (strcmp(command, "exit") == 0) {
 		printf("\n");
 		exit(0);
-	}
-	else if(strcmp(command, "dog") == 0) {
-		printf("woof\n");
 	}
 }
 
@@ -263,16 +259,16 @@ int main() {
 	};
 
 	while (1) {	
-		char command[MAX_ARR_LEN]; // contains one giant line of the command input by the user. This is parsed soon after.
-		char rootCommand[MAX_ARR_LEN]; // basically the first word of the command like echo, ls, etc
-		char* args[MAX_ARR_LEN]; // contains the arguments of the command in an array of strings which excludes the root command
+		char command[MAX_ARR_LEN]; // The whole raw un-parsed input received from the user as the command
+		char rootCommand[MAX_ARR_LEN]; // First word of the command i.e the command name
+		char* args[MAX_ARR_LEN]; // The arguments of the array excluding the root command / command name
 
-		shellPrompt(); // prompt for the shell
-		shellInput(command, rootCommand, args); // gets the input for the shell
-
-		checkForBasicCommand(command); // check and run commands like exit, clear
-		checkForInternalCommand(command, rootCommand, args); // check for internal commands like echo, pwd
-		checkForExternalCommand(command, rootCommand, args); // check for external commands like ls, cat
+		shellPrompt(); // Prints the prompt for the shell
+		shellInput(command, rootCommand, args); // Gets the command to execute as input
+		
+		checkForBasicCommand(command); // Checks and runs basic commands if found
+		checkForInternalCommand(command, rootCommand, args); // Checks and runs internal commands if found
+		checkForExternalCommand(command, rootCommand, args); // Checks and runs external commands if found
 
 		if (!checkForValidCommand(rootCommand)) {
 			printf("armsh: command not found: %s\n", rootCommand);
