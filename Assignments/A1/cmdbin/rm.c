@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
         }
 
     };
-    
+
 
     if (argc == 0) { 
         printf("rm: You need to give some file as input\n");
@@ -133,6 +133,9 @@ int main(int argc, char *argv[]) {
                 }
             }
         }
+    }
+    else {
+        printf("rm: Invalid format\n");
     }
     return 0;
 
