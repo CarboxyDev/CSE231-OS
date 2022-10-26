@@ -25,7 +25,7 @@ char fullPathToBinaries[PATH_MAX];
  *  This function will allow the user to output any message they want via the command-line
  *  Supported Flags: -n, --help
  *  Supported Edge cases:
- *      1. TBD
+ *      1. Handle the case where no arguments are given with echo
  *      2. TBD
  *
  *  TODO: Implement the edge cases
@@ -96,22 +96,39 @@ void cd(char command[], char rootCommand[], char *args[]) {
 
 /*
  *  This function contains the code for the internal command "pwd"
- *  This function will allow the user to print/view their present working directory
+ *  This function will allow the user to print/view their current working directory
  *  Supported Flags: -L, -P
  *  Supported Edge cases:
- *      1. TBD
- *      2. TBD
+ *      1. Handle case where too many arguments are provided
+ *      2. Handle case where the current working directory is deleted (from external influence) but the user is still present in the directory in the shell 
  *
- *  TODO: Implement the flags and the edge cases
  */
 
 
 void pwd(char command[], char rootCommand[], char *args[]) {
-	char currentDir[PATH_MAX];
-
-	if (getcwd(currentDir, sizeof(currentDir)) != NULL) {
-		printf("%s\n", currentDir);
+	if (args[0] == NULL || (strcmp(args[0], "-P") == 0 && args[1] == NULL)) {
+		char currentDir[PATH_MAX];
+		if (getcwd(currentDir, sizeof(currentDir)) != NULL) {
+			printf("%s\n", currentDir);
+		}
+		else {
+			printf("pwd: The current working directory does not exist!\n");
+		}
 	}
+	else if (args[0] == NULL || (strcmp(args[0], "-L") == 0 && args[1] == NULL)) {
+		char currentDir[PATH_MAX];
+		if (getcwd(currentDir, sizeof(currentDir)) != NULL) {
+			printf("%s\n", currentDir);
+		}
+		else {
+			printf("pwd: The current working directory does not exist!\n");
+		}
+	}
+	else {
+		printf("pwd: Too many arguments\n");
+	}
+
+
 };
 
 
