@@ -193,11 +193,9 @@ void shellPrompt() {
 		if (!skipToken) {
 			char *token = strtok(currentDir, "/");
 			char checkedToken[MAX_ARR_LEN];
-			while (token != NULL)
-			{
+			while (token != NULL) {
 				token = strtok(NULL, "/");
-				if (token != NULL)
-				{
+				if (token != NULL) {
 					strcpy(checkedToken, token);
 				}
 			}
