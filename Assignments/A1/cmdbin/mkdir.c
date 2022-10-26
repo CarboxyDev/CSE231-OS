@@ -40,6 +40,16 @@ int main(int argc, char *argv[]) {
             printf("mkdir: Directory already exists\n");
         }
     }
+    else if (argc == 2 && strcmp(argv[0], "-p") == 0) { // -p flag
+        struct stat s;
+        if (stat(argv[1], &s) == -1) { 
+            mkdir(argv[1], 0700);
+            printf("Created directory %s\n", argv[1]);
+        }
+        else {
+            printf("mkdir: Directory already exists\n");
+        }
+    }
     else if (argc >= 2) { // create multiple directories w/o use of any flags
         int i = 0;
         while (1) {

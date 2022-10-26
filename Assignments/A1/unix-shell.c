@@ -229,6 +229,7 @@ void shellInput(char command[], char rootCommand[], char* args[]) {
 	};
 
 	if (chrCount == 1) { // executes when no command was written
+		strcpy(rootCommand, "");
 		return;
 	};
 
@@ -248,7 +249,7 @@ void shellInput(char command[], char rootCommand[], char* args[]) {
 	}
 
 	/* Generate the args array of Strings */
-	char *argsTemp[MAX_ARR_LEN]; // create a temporary array of Strings for holding the arguments
+	char *argsTemp[MAX_ARR_LEN]; // create a temporary array of strings for holding the arguments
 	char commandCopy[MAX_ARR_LEN]; // create a temporary copy of the command line input
 	strcpy(commandCopy, command);	
 	char *parseToken; 
@@ -272,7 +273,7 @@ void shellInput(char command[], char rootCommand[], char* args[]) {
 
 
 int checkForValidCommand(char rootCommand[]) {
-	if (strcmp(rootCommand, "clear") == 0 || strcmp(rootCommand, "exit") == 0 || strcmp(rootCommand, "dog") == 0) {
+	if (strcmp(rootCommand, "clear") == 0 || strcmp(rootCommand, "exit") == 0) {
 		return 1;
 	}
 	else if (strcmp(rootCommand, "echo") == 0 || strcmp(rootCommand, "cd") == 0 || strcmp(rootCommand, "pwd") == 0) {
