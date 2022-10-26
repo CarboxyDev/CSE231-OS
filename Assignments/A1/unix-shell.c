@@ -244,7 +244,47 @@ void pwd(char command[], char rootCommand[], char *args[]) {
 
 void* execThread(void* vargs) {
 	char* command = (char*) vargs;
-	printf("%s", command);
+	char rootCommand[100];
+
+	// To get the root command
+	for (int i = 0; i < MAX_ARR_LEN; i++) {  
+		char chr = command[i];
+		if (chr == '\0' || chr == ' ' || chr == '\n') {
+			rootCommand[i] = '\0';
+			break;
+		}
+		rootCommand[i] = chr;
+	}
+
+	char args[MAX_ARR_LEN];
+	int c = 0;
+	int x = 0;
+	for (int i = 0; i < MAX_ARR_LEN; i++) {
+		char chr = command[i];
+
+		if (c == 0) {
+			if (chr == ' ') {
+				x = 0;
+				c++;
+			}
+
+		}
+		if (c != 0) {
+			args[x] = command[i];
+		}
+		x++;
+	}
+
+	char binPath[PATH_MAX];
+	strcpy(binPath, fullPathToBinaries);
+	strcat(binPath, rootCommand);
+	strcat(binPath, args);
+
+	char sysCommand[1000];
+	strcpy(sysCommand, binPath);
+	sysCommand[strlen(sysCommand) - 3] = '\0';
+
+	system(sysCommand);
 	return NULL;
 }
 
@@ -285,35 +325,11 @@ void runExternalCommand(char command[], char rootCommand[], char* args[]) {
 	}
 	else if (executionType == 1) { // Thread based execution
 		printf("[Thread based execution]\n");
-		/*
-		char argsAsString[1000];
-
-		int i = 0;
-		while (1) {
-			char* arg = args[i];
-			if (arg == NULL) {
-				break;
-			}
-			else if (strcmp(arg, "&t") == 0) {
-				i++;
-				continue;
-			};
-
-			if (i == 0) {
-				strcat(argsAsString, arg);
-			}
-			else if (i != 0) {
-				char tempArg[1000] = " ";
-				strcat(tempArg, arg);
-				strcat(argsAsString, tempArg);
-			};
-
-			i++;
-		}*/
 
 		pthread_t t;
 		pthread_create(&t, NULL, execThread, (void*) command);
 		pthread_join(t, NULL);
+
 
 	}
 
