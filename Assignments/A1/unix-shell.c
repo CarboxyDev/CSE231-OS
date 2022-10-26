@@ -69,6 +69,12 @@ int matchQuotesInString(char command[], char *args[]) {
 
 void echoWithMatchQuotes(char command[], char *args[]) {
 	int i = 5; // skip the "echo " at the start of the command
+	int nFlag = 0;
+
+	if (strcmp(args[0], "-n") == 0) { // handle the -n flag
+		i = 5 + 3;
+		nFlag = 1;
+	};
 
 	while (1) {
 		char chr = command[i];
@@ -88,7 +94,10 @@ void echoWithMatchQuotes(char command[], char *args[]) {
 		printf("%c", chr);
  		i++;
 	}
-	printf("\n");
+	
+	if (nFlag == 0) {
+		printf("\n");
+	}
 }
 
 
@@ -115,18 +124,27 @@ void echo(char command[], char rootCommand[], char *args[]) {
 	}
 	else {
 		if (noQuoteInString(command, args)) {
-			int i = 0;
+			int i = 5;
+			int nFlag = 0;
+
+			if (strcmp(args[0], "-n") == 0) { // handle the -n flag
+				i = 5 + 3;
+				nFlag = 1;
+			};
+
 			while (1) {
-				if (args[i] == NULL) {
+				char chr = command[i];
+				if (chr == '\0') {
 					break;
 				}
-				printf("%s ", args[i]);
+				printf("%c", chr);
 				i++;
 			}
 
-			if (strcmp(args[0], "-n") != 0) { // handle the -n flag
+			if (nFlag == 0) {
 				printf("\n");
 			}
+
 		}
 		else { // a quote was encountered in the message
 			if (matchQuotesInString(command, args)) {
