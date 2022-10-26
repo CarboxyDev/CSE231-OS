@@ -7,8 +7,9 @@
  *      1. Handle using cat command on directories (illegal!)
  *      2. Handle invalid file names as arguments
  *      3. Handle the case when no argument is given with the command
+ *      4. Handle multiple files as input
  *  
- *  TODO: Handle multiple files in input
+ *  TODO: None
  */
 
 
@@ -29,89 +30,129 @@ int checkFile(char filePath[]) {
 
 int main(int argc, char* argv[]) {
     if (argc == 0) { 
-        printf("cat: You need to give some file as input\n");
+        printf("cat: No files as input provided\n");
     }
-    else if (argc == 1) { // Handle a single file
-        if (access(argv[0], F_OK) != 0) { // file does not exist
-            printf("cat: No such file or directory\n");
-        }
-        else if (!checkFile(argv[0])) {
-            printf("cat: %s is a directory\n", argv[0]);
-        }
-        else {
-            FILE *file;
-            file = fopen(argv[0], "r");
+    else if (argc >= 1 && !(strcmp(argv[0], "-n") == 0 || strcmp(argv[0], "-b") == 0)) {
+        int i = 0;
 
-            if (file == NULL) {
-                printf("cat: Error: Invalid file name provided\n");
+        while (1) {
+            if (argv[i] == NULL) {
+                break;
+            }
+            else if (access(argv[i], F_OK) != 0) { // file does not exist
+                printf("cat: %s: No such file or directory\n", argv[i]);
+                i++;
+                continue;
+            }
+            else if (!checkFile(argv[i])) {
+                printf("cat: %s: Is a directory\n", argv[i]);
+                break;
             }
             else {
-                while (1) {
-                    char chr = fgetc(file);
-                    if (chr == EOF) {
-                        break;
+                FILE *file;
+                file = fopen(argv[i], "r");
+
+                if (file == NULL) {
+                    printf("cat: %s: No such file or directory\n", argv[i]);
+                    i++;
+                    continue;
+                }
+                else {
+                    while (1) {
+                        char chr = fgetc(file);
+                        if (chr == EOF) {
+                            break;
+                        }
+                        printf("%c", chr);
                     }
-                    printf("%c", chr);
                 }
             }
 
-            printf("\n");
+            i++;
         }
-
     }
     else if (argc >= 2 && strcmp(argv[0], "-n") == 0) {
-        if (access(argv[1], F_OK) != 0) { // file does not exist
-            printf("cat: No such file or directory\n");
-        }
-        else if (!checkFile(argv[1])) {
-            printf("cat: %s is a directory\n", argv[1]);
-        }
-        else {
-            FILE *file;
-            file = fopen(argv[1], "r");
+        int i = 1;
+
+        while (1) {
+            int lineNumber = 1;
             char lineBuffer[512];
 
-            if (file == NULL) {
-                printf("cat: Error: Invalid file name provided\n");
+            if (argv[i] == NULL) {
+                break;
+            }
+            else if (access(argv[i], F_OK) != 0) { // file does not exist
+                printf("cat: %s: No such file or directory\n", argv[i]);
+                i++;
+                continue;
+            }
+            else if (!checkFile(argv[i])) {
+                printf("cat: %s: Is a directory\n", argv[i]);
+                break;
             }
             else {
-                int lineNumber = 1;
-                while (fgets(lineBuffer, 512, file) != 0) {
-                    printf(" %d %s", lineNumber, lineBuffer);
-                    lineNumber++;
+                FILE *file;
+                file = fopen(argv[i], "r");
+
+                if (file == NULL) {
+                    printf("cat: %s: No such file or directory\n", argv[i]);
+                    i++;
+                    continue;
                 }
-            }
-            printf("\n");
-        }
-    }
-    else if (argc >= 2 && strcmp(argv[0], "-b") == 0) {
-        if (access(argv[1], F_OK) != 0) { // file does not exist
-            printf("cat: No such file or directory\n");
-        }
-        else if (!checkFile(argv[1])) {
-            printf("cat: %s is a directory\n", argv[1]);
-        }
-        else {
-            FILE *file;
-            file = fopen(argv[1], "r");
-            char lineBuffer[512];
-
-            if (file == NULL) {
-                printf("cat: Error: Invalid file name provided\n");
-            }
-            else {
-                int lineNumber = 1;
-                while (fgets(lineBuffer, 512, file) != 0) {
-                    if (strcmp(lineBuffer, "\n") == 0) { // the line is a blank line
-                        printf("\n");
-                    }
-                    else {
+                else {
+                    while (fgets(lineBuffer, 512, file) != 0) {
                         printf(" %d %s", lineNumber, lineBuffer);
                         lineNumber++;
                     }
                 }
             }
-            printf("\n");
+
+            i++;
+        }
+    }
+
+    else if (argc >= 2 && strcmp(argv[0], "-b") == 0) {
+        int i = 1;
+
+        while (1) {
+            int lineNumber = 1;
+            char lineBuffer[512];
+
+            if (argv[i] == NULL) {
+                break;
+            }
+            else if (access(argv[i], F_OK) != 0) { // file does not exist
+                printf("cat: %s: No such file or directory\n", argv[i]);
+                i++;
+                continue;
+            }
+            else if (!checkFile(argv[i])) {
+                printf("cat: %s: Is a directory\n", argv[i]);
+                break;
+            }
+            else {
+                FILE *file;
+                file = fopen(argv[i], "r");
+
+                if (file == NULL) {
+                    printf("cat: %s: No such file or directory\n", argv[i]);
+                    i++;
+                    continue;
+                }
+                else {
+                    while (fgets(lineBuffer, 512, file) != 0) {
+                        if (strcmp(lineBuffer, "\n") == 0) { // the line is a blank line
+                            printf("\n");
+                        }
+                        else {
+                            printf(" %d %s", lineNumber, lineBuffer);
+                            lineNumber++;
+                        }
+                    }
+                }
+            }
+
+            i++;
         }
     }
 
