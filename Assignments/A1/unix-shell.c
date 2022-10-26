@@ -20,7 +20,16 @@
 char fullPathToBinaries[PATH_MAX];
 
 
-/* INTERNAL COMMANDS START */
+/*
+ *  This function contains the code for the internal command "echo"
+ *  This function will allow the user to output any message they want via the command-line
+ *  Supported Flags: -n, --help
+ *  Supported Edge cases:
+ *      1. TBD
+ *      2. TBD
+ *
+ *  TODO: Implement the edge cases
+ */
 
 
 void echo(char command[], char rootCommand[], char *args[]) {
@@ -55,6 +64,19 @@ void echo(char command[], char rootCommand[], char *args[]) {
 	}
 }
 
+
+/*
+ *  This function contains the code for the internal command "cd"
+ *  This function will allow the user to change their working directories
+ *  Supported Flags: TBD, TBD
+ *  Supported Edge cases:
+ *      1. Handle the case where the user tries to cd into a non-existent directory
+ *      2. User gets cd'd into their user working directory when the command is ran without any arguments
+ *
+ *  TODO: Implement the flags
+ */
+
+
 void cd(char command[], char rootCommand[], char *args[]) {
 	if (args[0] == NULL) {
 		int changeDir = chdir(getenv("HOME"));
@@ -72,6 +94,18 @@ void cd(char command[], char rootCommand[], char *args[]) {
 }
 
 
+/*
+ *  This function contains the code for the internal command "pwd"
+ *  This function will allow the user to print/view their present working directory
+ *  Supported Flags: -L, -P
+ *  Supported Edge cases:
+ *      1. TBD
+ *      2. TBD
+ *
+ *  TODO: Implement the flags and the edge cases
+ */
+
+
 void pwd(char command[], char rootCommand[], char *args[]) {
 	char currentDir[PATH_MAX];
 
@@ -79,9 +113,6 @@ void pwd(char command[], char rootCommand[], char *args[]) {
 		printf("%s\n", currentDir);
 	}
 };
-
-
-/* INTERNAL COMMANDS END */
 
 
 void runExternalCommand(char command[], char rootCommand[], char* args[]) {
