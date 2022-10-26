@@ -20,29 +20,55 @@
 
 
 int main(int argc, char* argv[]) {
-    if (argv[0] != NULL) {
-        if (argv[argc-1] != NULL && strcmp(argv[argc-1], "!t") == 0) {
+    if (argc >= 2) {
+        int isThreadBased = 0;
+        int i = 0;
+        while (1) {
+            if (argv[i] == NULL) {
+                if (strcmp(argv[i - 1], "!t") == 0) {
+                    isThreadBased = 1;
+                };
+                break;
+            };
 
+            i++;
+        };
+
+        if (isThreadBased) {
             argc -= 2;
+            char* new[1000];
 
-            char* newArgv[100];
-            
-            int i = 0;
+            i = 0;
             int c = 0;
             while (1) {
-                if (argv[i] == NULL || strcmp(argv[i], "!t") == 0) {
-                    newArgv[c] = NULL;
+                if (argv[i] == NULL) {
+                    new[c] = NULL;
                     break;
                 }
-                if (i != 0) {
-                    strcpy(newArgv[c], argv[i]);
-                    printf("strcpy|");
+                else if (strcmp(argv[i], "!t") == 0) {
+                    new[c] = NULL;
+                    break;
                 }
+                else if (i == 0) {
+                    i++;
+                    continue;
+                }
+                strcpy(new[c], argv[i]);
                 i++;
                 c++;
             };
-            printf("Args -> \n");
+            
+            int x = 0;
+            while (1) {
+                if (new[x] == NULL) {
+                    argv[x] = NULL;
+                    break;
+                }
+                strcpy(argv[x], new[x]);
+                x++;
+            };
         }
+
     };
 
 
