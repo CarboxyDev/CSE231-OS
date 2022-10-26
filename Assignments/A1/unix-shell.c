@@ -20,6 +20,78 @@
 char fullPathToBinaries[PATH_MAX];
 
 
+int noQuoteInString(char command[], char *args[]) {
+	int i = 0;
+	while (1) {
+		char chr = command[i];
+		if (chr == '\0') {
+			break;
+		}
+		if (chr == '\"' || chr == '\'') {
+			return 0;
+		}
+		i++;
+	}
+
+	return 1;
+}
+
+
+int matchQuotesInString(char command[], char *args[]) {
+	int singleQuoteCount = 0;
+	int doubleQuoteCount = 0;
+	int i = 0;
+
+	while (1) {
+		char chr = command[i];
+		if (chr == '\0') {
+			break;
+		}
+		if (chr == '\"') {
+			doubleQuoteCount++;
+		}
+		if (chr == '\'') {
+			singleQuoteCount++;
+		}
+
+ 		i++;
+	}
+
+	if (singleQuoteCount % 2 == 0 && doubleQuoteCount % 2 == 0) { // successful matching of quotes
+		return 1;
+	}
+	else {
+		return 0;
+	}
+
+}
+
+
+void echoWithMatchQuotes(char command[], char *args[]) {
+	int i = 5; // skip the "echo " at the start of the command
+
+	while (1) {
+		char chr = command[i];
+		if (chr == '\0') {
+			break;
+		}
+		if (chr == '\"') {
+			i++;
+			continue;
+
+		}
+		if (chr == '\'') {
+			i++;
+			continue;
+		}
+
+		printf("%c", chr);
+ 		i++;
+	}
+	printf("\n");
+}
+
+
 /*
  *  This function contains the code for the internal command "echo"
  *  This function will allow the user to output any message they want via the command-line
@@ -28,7 +100,7 @@ char fullPathToBinaries[PATH_MAX];
  *      1. Handle the case where no arguments are given with echo
  *      2. Do not print quotation marks when printing the message
  *
- *  TODO: Implement edge case #2
+ *  TODO: None
  */
 
 
@@ -42,18 +114,29 @@ void echo(char command[], char rootCommand[], char *args[]) {
 		printf("Supported flags: -n, --help\n");
 	}
 	else {
-		int i = 0;
-		while (1) {
-			if (args[i] == NULL) {
-				break;
+		if (noQuoteInString(command, args)) {
+			int i = 0;
+			while (1) {
+				if (args[i] == NULL) {
+					break;
+				}
+				printf("%s ", args[i]);
+				i++;
 			}
-			printf("%s ", args[i]);
-			i++;
+
+			if (strcmp(args[0], "-n") != 0) { // handle the -n flag
+				printf("\n");
+			}
+		}
+		else { // a quote was encountered in the message
+			if (matchQuotesInString(command, args)) {
+				echoWithMatchQuotes(command, args);
+			}
+			else {
+				printf("echo: Error in matching quotes used in the message\n");
+			}
 		}
 
-		if (strcmp(args[0], "-n") != 0) { // handle the -n flag
-			printf("\n");
-		}
 	}
 }
 
@@ -94,7 +177,7 @@ void cd(char command[], char rootCommand[], char *args[]) {
  *  Supported Edge cases:
  *      1. Handle case where too many arguments are provided
  *      2. Handle case where the current working directory is deleted (from external influence) but the user is still present in the directory in the shell 
- *
+ *	TODO: None
  */
 
 
