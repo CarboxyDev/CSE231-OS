@@ -14,6 +14,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <limits.h>
+#include <pthread.h>
 #define MAX_ARR_LEN 1000
 
 
@@ -241,24 +242,80 @@ void pwd(char command[], char rootCommand[], char *args[]) {
 };
 
 
+void* execThread(void* vargs) {
+	char* argsAsString = (char*) vargs;
+	return NULL;
+}
+
+
 void runExternalCommand(char command[], char rootCommand[], char* args[]) {
-	pid_t forkType = fork();
+	
+	int executionType = 0; // 0 -> fork-based, 1 -> thread-based
 
-	if (forkType == -1) {
-		printf("Error: Failed to run this external command due to a forking error.");
+	int i = 0;
+	while (1) {
+		if (args[i] == NULL) {
+			if (strcmp(args[i - 1], "&t") == 0) {
+				executionType = 1;
+			}
+			break;
+		}
+		i++;
 	}
-	else if (forkType == 0) { // for child process
-		char binPath[PATH_MAX];
-		strcpy(binPath, fullPathToBinaries);
-		strcat(binPath, rootCommand);
 
-		int execBin = execv(binPath, args);
+	if (executionType == 0) { // Fork based execution
+		pid_t forkType = fork();
 
-		exit(0);
+		if (forkType == -1) {
+			printf("Error: Failed to run this external command due to a forking error.");
+		}
+		else if (forkType == 0) { // for child process
+			char binPath[PATH_MAX];
+			strcpy(binPath, fullPathToBinaries);
+			strcat(binPath, rootCommand);
+
+			int execBin = execv(binPath, args);
+
+			exit(0);
+		}
+		else { // for parent process
+			wait(NULL);
+		} 
 	}
-	else { // for parent process
-		wait(NULL);
-	} 
+	else if (executionType == 1) { // Thread based execution
+		printf("[Thread based execution]\n");
+
+		char argsAsString[1000];
+
+		int i = 0;
+		while (1) {
+			char* arg = args[i];
+			if (arg == NULL) {
+				break;
+			}
+			else if (strcmp(arg, "&t") == 0) {
+				i++;
+				continue;
+			};
+
+			if (i == 0) {
+				strcat(argsAsString, arg);
+			}
+			else if (i != 0) {
+				char tempArg[1000] = " ";
+				strcat(tempArg, arg);
+				strcat(argsAsString, tempArg);
+			};
+
+			i++;
+		}
+
+		pthread_t t;
+		pthread_create(&t, NULL, execThread, (void*) argsAsString);
+		pthread_join(t, NULL);
+
+	}
+
 }
 
 
@@ -414,10 +471,10 @@ int main() {
 		strcat(fullPathToBinaries, "/cmdbin/");
 	};
 
-	while (1) {	
-		char command[MAX_ARR_LEN]; // The whole raw un-parsed input received from the user as the command
+	while (1) {
+		char command[MAX_ARR_LEN];	   // The whole raw un-parsed input received from the user as the command
 		char rootCommand[MAX_ARR_LEN]; // First word of the command i.e the command name
-		char* args[MAX_ARR_LEN]; // The arguments of the array excluding the root command / command name
+		char *args[MAX_ARR_LEN];	   // The arguments of the array excluding the root command / command name
 
 		shellPrompt(); // Prints the prompt for the shell
 		shellInput(command, rootCommand, args); // Gets the command to execute as input
