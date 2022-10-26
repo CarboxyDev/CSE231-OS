@@ -4,10 +4,10 @@
  *  The mkdir command will generally create a new directory for the user
  *  Supported Flags: -v, -p
  *  Supported Edge cases:
- *      1. Create multiple directories at once
+ *      1. Create multiple directories at once (without using any flags)
  *      2. Error message when requested directory already exists
  *  
- *  TODO: Implement -p flag and edge case 1
+ *  TODO: Implement -p flag
  */
 
 
@@ -39,6 +39,26 @@ int main(int argc, char *argv[]) {
         else {
             printf("mkdir: Directory already exists\n");
         }
+    }
+    else if (argc >= 2) { // create multiple directories w/o use of any flags
+        int i = 0;
+        while (1) {
+            if (argv[i] == NULL) {
+                break;
+            }
+            struct stat s;
+            if (stat(argv[i], &s) == -1) {
+                mkdir(argv[i], 0700);
+            }
+            else {
+                printf("mkdir: %s: Directory already exists\n", argv[i]);
+                i++;
+                continue;
+            }
+
+            i++;
+        }
+
     }
 
 
