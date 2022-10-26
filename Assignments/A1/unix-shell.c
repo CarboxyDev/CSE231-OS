@@ -26,9 +26,9 @@ char fullPathToBinaries[PATH_MAX];
  *  Supported Flags: -n, --help
  *  Supported Edge cases:
  *      1. Handle the case where no arguments are given with echo
- *      2. TBD
+ *      2. Do not print quotation marks when printing the message
  *
- *  TODO: Implement the edge cases
+ *  TODO: Implement edge case #2
  */
 
 
@@ -36,19 +36,9 @@ void echo(char command[], char rootCommand[], char *args[]) {
 	if (args[0] == NULL) {
 		printf("\n");
 	}
-	else if (strcmp(args[0], "-n") == 0) { 
-		int i = 0;
-		while (1) {
-			if (args[i] == NULL) {
-				break;
-			}
-			printf("%s ", args[i]);
-			i++;
-		}
-	}
-	else if (strcmp(args[0], "--help") == 0) { // print the help menu
-		printf("Echo command - Help\n");
-		printf("Usage format: echo <flag> <message>\n");
+	else if (strcmp(args[0], "--help") == 0) { // print the help menu for --help flag
+		printf("echo: help\n");
+		printf("Usage: echo <flag> <message>\n");
 		printf("Supported flags: -n, --help\n");
 	}
 	else {
@@ -60,7 +50,10 @@ void echo(char command[], char rootCommand[], char *args[]) {
 			printf("%s ", args[i]);
 			i++;
 		}
-		printf("\n");
+
+		if (strcmp(args[0], "-n") != 0) { // handle the -n flag
+			printf("\n");
+		}
 	}
 }
 
