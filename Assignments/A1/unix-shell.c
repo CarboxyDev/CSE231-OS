@@ -94,7 +94,7 @@ void echoWithMatchQuotes(char command[], char *args[]) {
 		printf("%c", chr);
  		i++;
 	}
-	
+
 	if (nFlag == 0) {
 		printf("\n");
 	}
@@ -162,12 +162,12 @@ void echo(char command[], char rootCommand[], char *args[]) {
 /*
  *  This function contains the code for the internal command "cd"
  *  This function will allow the user to change their working directories
- *  Supported Flags: TBD, TBD
+ *  Supported Flags: -P, -L
  *  Supported Edge cases:
  *      1. Handle the case where the user tries to cd into a non-existent directory
- *      2. User gets cd'd into their user working directory when the command is ran without any arguments
+ *      2. User gets cd'd into their user working directory when the command is ran without any argument
  *
- *  TODO: Implement the flags
+ *  TODO: None
  */
 
 
@@ -178,11 +178,26 @@ void cd(char command[], char rootCommand[], char *args[]) {
 			printf("cd: No such directory\n");
 		}
 	}
-	else {
+	else if (args[0] != NULL && strcmp(args[0], "-P") == 0) { // -P flag
+		int changeDir = chdir(args[1]);
+		if (changeDir == -1) {
+			printf("cd: No such directory\n");
+		}
+	}
+	else if (args[0] != NULL && strcmp(args[0], "-L") == 0) { // -L flag
+		int changeDir = chdir(args[1]);
+		if (changeDir == -1) {
+			printf("cd: No such directory\n");
+		}
+	}
+	else if (args[0] != NULL){
 		int changeDir = chdir(args[0]);
 		if (changeDir == -1) {
 			printf("cd: No such directory\n");
 		}
+	}
+	else {
+		printf("cd: Invalid usage of command\n");
 	}
 
 }
