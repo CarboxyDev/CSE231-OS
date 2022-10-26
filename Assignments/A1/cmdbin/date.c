@@ -4,10 +4,10 @@
  *  The date command will be used to fetch the user's date on their Operating System
  *  Supported Flags: -u, -R
  *  Supported Edge cases:
- *      1. TBD
+ *      1. Handle cases of invalid usage
  *      2. TBD
  * 
- *  TODO: Implement the edge cases
+ *  TODO: Implement the remaining edge case
  */
 
 
@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
 
         printf("Local Time: %s", formatTime);
     }
-    else if (argc == 1 && strcmp(argv[0], "-u") == 0) { //when -u flag is encountered
+    else if (argc == 1 && strcmp(argv[0], "-u") == 0) { // -u flag. Print datetime in UTC
         char utcTime[1000];
         time_t utc;
 
@@ -34,8 +34,7 @@ int main(int argc, char* argv[]) {
         t = gmtime(&utc);
         printf("UTC Time: %s", asctime(t));
     }
-    else if (argc == 1 && strcmp(argv[0],"-R") == 0) {
-        // -R flag is encountered. Print date/time in RFC 5322 format
+    else if (argc == 1 && strcmp(argv[0],"-R") == 0) { // -R flag. Print datetime in RFC 5322 format
         char formatTime[1000];
         time_t currentTime;
         time(&currentTime);

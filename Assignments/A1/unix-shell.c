@@ -14,18 +14,72 @@
 #include <string.h>
 #include <unistd.h>
 #include <limits.h>
-
-
-#define DEBUG 0
 #define MAX_ARR_LEN 1000
 
 
 char fullPathToBinaries[PATH_MAX];
 
+char *findFlagInCommand(char command[], char *secondWord);
 
-void echo(char command[], char rootCommand[]);
-void cd(char command[], char rootCommand[]);
-void pwd(char command[], char rootCommand[]);
+
+/* INTERNAL COMMANDS START */
+
+
+void echo(char command[], char rootCommand[], char *args[]) {
+	if (args[0] == NULL) {
+		printf("\n");
+	}
+	else if (strcmp(args[0], "-n") == 0) { 
+		int i = 0;
+		while (1) {
+			if (args[i] == NULL) {
+				break;
+			}
+			printf("%s ", args[i]);
+			i++;
+		}
+	}
+	else if (strcmp(args[0], "--help") == 0) { // print the help menu
+		printf("Echo command - Help\n");
+		printf("Usage format: echo <flag> <message>\n");
+		printf("Supported flags: -n, --help\n");
+	}
+	else {
+		int i = 0;
+		while (1) {
+			if (args[i] == NULL) {
+				break;
+			}
+			printf("%s ", args[i]);
+			i++;
+		}
+		printf("\n");
+	}
+}
+
+void cd(char command[], char rootCommand[], char *args[]) {
+	char sw[MAX_ARR_LEN];
+	char secondWord[MAX_ARR_LEN]; // second word is basically the flag
+	char *secondWordPtr = findFlagInCommand(command, sw);
+	strcpy(secondWord, secondWordPtr);
+
+	int success = chdir(secondWord);
+	if (success == -1) { // failure
+		perror("Error"); // print the error
+	}
+}
+
+
+void pwd(char command[], char rootCommand[], char *args[]) {
+	char currentDir[PATH_MAX];
+
+	if (getcwd(currentDir, sizeof(currentDir)) != NULL) {
+		printf("%s\n", currentDir);
+	}
+};
+
+
+/* INTERNAL COMMANDS END */
 
 
 void runExternalCommand(char command[], char rootCommand[], char* args[]) {
@@ -50,23 +104,6 @@ void runExternalCommand(char command[], char rootCommand[], char* args[]) {
 }
 
 
-void debug(char command[], char rootCommand[], char* args[]) {
-	if (DEBUG) {
-		printf("[ROOT] %s\n", rootCommand);
-		printf("[CMD] %s\n", command);
-		printf("[ARGS] ");
-		
-		for (int i = 0; i < 10; i++) {
-			if (args[i] == NULL) { 
-				break;
-			}
-			printf("%s,", args[i]);
-		}
-		printf("\n");
-	}
-}
-
-
 void checkForBasicCommand(char command[]) {
 	if (strcmp(command, "clear") == 0) {
 		printf("\033[H\033[J"); // clears the console
@@ -81,15 +118,15 @@ void checkForBasicCommand(char command[]) {
 }
 
 
-void checkForInternalCommand(char command[], char rootCommand[]) {
+void checkForInternalCommand(char command[], char rootCommand[], char *args[]) {
 	if (strcmp(rootCommand, "echo") == 0) {
-		echo(command, rootCommand);
+		echo(command, rootCommand, args);
 	}
 	else if (strcmp(rootCommand, "pwd") == 0) {
-		pwd(command, rootCommand);
+		pwd(command, rootCommand, args);
 	}
 	else if (strcmp(rootCommand, "cd") == 0) {
-		cd(command, rootCommand);
+		cd(command, rootCommand, args);
 	}
 }
 
@@ -102,7 +139,6 @@ void checkForExternalCommand(char command[], char rootCommand[], char* args[]) {
 
 
 void shellPrompt() {
-	//todo: fix any bugs with the path name in the prompt
 	char* user = getenv("USER");
 	char currentDir[PATH_MAX];
 	char pwdLastDir[MAX_ARR_LEN];
@@ -130,11 +166,12 @@ void shellPrompt() {
 		}
 	}
 
-	printf("\033[38;5;7m"); // turn color to custom color
-	printf("%s", user); // print the username in custom color 
-	printf("\033[38;5;183m"); // turn color to custom color
-	printf(" %s ", pwdLastDir); // print the current working directory in custom color
-	printf("\033[97m"); // reset color to default
+	// Print the shell prompt in colors other than the default color
+	printf("\033[38;5;7m");
+	printf("%s", user); 
+	printf("\033[38;5;183m"); 
+	printf(" %s ", pwdLastDir); 
+	printf("\033[97m"); 
 	printf("$ ");
 }
 
@@ -212,11 +249,12 @@ int checkForValidCommand(char rootCommand[]) {
 
 
 int main() {
-	printf("\033[H\033[J"); // clears the console
-	printf("\033[48;5;183m"); // sets background to custom color
-	printf("\033[38;5;0m"); // sets foreground to custom color
+	// Print the shell greet message in color
+	printf("\033[H\033[J"); 
+	printf("\033[48;5;183m"); // background
+	printf("\033[38;5;0m"); // foreground 
 	printf("[!] Switched to ARMSH \n\n");
-	printf("\033[0m"); // reset color to default
+	printf("\033[0m"); // reset colors
 
 	if (getcwd(fullPathToBinaries, sizeof(fullPathToBinaries)) != NULL) {
 		strcat(fullPathToBinaries, "/cmdbin/");
@@ -230,16 +268,13 @@ int main() {
 		shellPrompt(); // prompt for the shell
 		shellInput(command, rootCommand, args); // gets the input for the shell
 
-		debug(command, rootCommand, args); // For debugging purposes. #define DEBUG sets the debug mode for 0/1
-
 		checkForBasicCommand(command); // check and run commands like exit, clear
-		checkForInternalCommand(command, rootCommand); // check for internal commands like echo, pwd
+		checkForInternalCommand(command, rootCommand, args); // check for internal commands like echo, pwd
 		checkForExternalCommand(command, rootCommand, args); // check for external commands like ls, cat
 
 		if (!checkForValidCommand(rootCommand)) {
 			printf("armsh: command not found: %s\n", rootCommand);
 		}
-	
 	}
 	return 0;
 }
@@ -318,59 +353,3 @@ char* getContent(char command[], char* content, int containsFlag) {
 
 	return content;
 }
-
-
-void echo(char command[], char rootCommand[]) {
-	char sw[MAX_ARR_LEN];
-	char secondWord[MAX_ARR_LEN]; // second word is basically the flag
-	char* secondWordPtr = findFlagInCommand(command, sw);
-	strcpy(secondWord, secondWordPtr);
-
-	char cnt[MAX_ARR_LEN];
-	char content[MAX_ARR_LEN];
-
-	if (strcmp(secondWord,"-n") == 0) {
-		char* contentPtr = getContent(command, cnt, 1);
-		strcpy(content, contentPtr);
-		printf("%s", content);
-	}
-	else if (strcmp(secondWord, "--help") == 0) {
-		// print the help menu for echo
-		printf("HELP FOR ECHO\n");
-		printf("Usage format:\n");
-		printf("Without flags: echo <message>\n\n");
-		printf("With flags: echo [-n/--help] <message>\n\n");
-		printf("Flags: \n");
-		printf("-n : Prints the message without a newline character at the end\n");
-		printf("--help : Prints this message\n");
-	}
-	else {
-		// contains all the content which excludes the root command and the flag
-		char* contentPtr = getContent(command, cnt, 0);
-		strcpy(content, contentPtr);
-		printf("%s\n", content);
-	};
-
-}
-
-
-void cd(char command[], char rootCommand[]) {
-	char sw[MAX_ARR_LEN];
-	char secondWord[MAX_ARR_LEN]; // second word is basically the flag
-	char *secondWordPtr = findFlagInCommand(command, sw);
-	strcpy(secondWord, secondWordPtr);
-
-	int success = chdir(secondWord);
-	if (success == -1) { // failure
-		perror("Error"); // print the error
-	}
-}
-
-
-void pwd(char command[], char rootCommand[]) {
-	char currentDir[PATH_MAX];
-
-	if (getcwd(currentDir, sizeof(currentDir)) != NULL) {
-		printf("%s\n", currentDir);
-	}
-};
