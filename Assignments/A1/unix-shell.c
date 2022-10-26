@@ -282,8 +282,8 @@ void* execThread(void* vargs) {
 
 	char sysCommand[1000];
 	strcpy(sysCommand, binPath);
-	sysCommand[strlen(sysCommand) - 3] = '\0';
-
+	sysCommand[strlen(sysCommand) - 2] = '!';
+	//printf("Input to system(): %s\n", sysCommand);
 	system(sysCommand);
 	return NULL;
 }

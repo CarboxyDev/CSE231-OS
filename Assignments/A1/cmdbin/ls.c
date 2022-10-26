@@ -20,6 +20,32 @@
 
 
 int main(int argc, char* argv[]) {
+    if (argv[0] != NULL) {
+        if (argv[argc-1] != NULL && strcmp(argv[argc-1], "!t") == 0) {
+
+            argc -= 2;
+
+            char* newArgv[100];
+            
+            int i = 0;
+            int c = 0;
+            while (1) {
+                if (argv[i] == NULL || strcmp(argv[i], "!t") == 0) {
+                    newArgv[c] = NULL;
+                    break;
+                }
+                if (i != 0) {
+                    strcpy(newArgv[c], argv[i]);
+                    printf("strcpy|");
+                }
+                i++;
+                c++;
+            };
+            printf("Args -> \n");
+        }
+    };
+
+
     if (argc == 0 || ((argc == 1) && (strcmp(argv[0],"-a") == 0 || strcmp(argv[0], "-l") == 0))) {
         char currentDir[PATH_MAX];
 
