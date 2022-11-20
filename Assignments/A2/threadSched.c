@@ -4,19 +4,39 @@
 #include <unistd.h>
 #include <math.h>
 #include <sched.h>
+#include <time.h>
+#include <sys/resource.h>
+
+#define NANOS_PER_SEC 1000000000L
 
 
 void* countA(void* vargptr) {
-    printf("[Count A]");
+    clock_t t;
+    t = clock();
+
     unsigned long i;
     for (i=1; i < 4294967296; i++) {
     }
-    printf("\nFinished countA\n");
+
+    t = clock() - t;
+    double clockTimeThreadA = ((double)t)/ CLOCKS_PER_SEC;
+    printf("[!] Thread A - Clock time: %lf s\n", clockTimeThreadA);
+
     return NULL;
 }
 
 void* countB(void* vargptr) {
-    printf("[Count B]");
+    clock_t t;
+    t = clock();
+
+    unsigned long i;
+    for (i=1; i < 4294967296; i++) {
+    }
+
+    t = clock() - t;
+    double clockTimeThreadB = ((double)t)/ CLOCKS_PER_SEC;
+    printf("[!] Thread B - Clock time: %lf s\n", clockTimeThreadB);
+
     return NULL;
 }
 
@@ -29,21 +49,29 @@ void* countC(void* vargptr) {
 
 int main() {
     printf("[!] Start program\n");
+
+    // THREAD A    
     pthread_t threadA;
 
-    /*
-    pthread_attr_t threadA_attr;
-    struct sched_param threadA_param;
-    pthread_attr_init (&threadA_attr);
-    pthread_attr_getschedparam (&threadA_attr, &threadA_param);
-    */
     struct sched_param threadA_schedParam;
     threadA_schedParam.sched_priority = 0;
     pthread_setschedparam(threadA, SCHED_OTHER, &threadA_schedParam);
 
-
 	pthread_create(&threadA, NULL, countA , NULL);
     pthread_join(threadA, NULL);
+
+
+    // THREAD B
+
+    pthread_t threadB;
+
+    struct sched_param threadB_schedParam;
+    pthread_setschedparam(threadB, SCHED_RR, &threadB_schedParam);
+
+	pthread_create(&threadB, NULL, countB , NULL);
+    pthread_join(threadB, NULL);
+
+
 
 
 
