@@ -7,9 +7,10 @@
 
 void* countA(void* vargptr) {
     printf("[Count A]");
-    for (int i=0; i < pow(2,32); i++) {
-        // do no computation
+    unsigned long i = 1;
+    for (int i=1; i < pow(2,32); i++) {
     }
+    printf("\nFinished countA\n");
     return NULL;
 }
 
@@ -26,6 +27,10 @@ void* countC(void* vargptr) {
 
 
 int main() {
+    printf("[!] Start program\n");
+    pthread_t threadA;
+	pthread_create(&threadA, NULL, countA , NULL);
+    pthread_join(threadA, NULL);
 
 
 
