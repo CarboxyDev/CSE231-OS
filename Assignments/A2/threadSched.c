@@ -41,7 +41,17 @@ void* countB(void* vargptr) {
 }
 
 void* countC(void* vargptr) {
-    printf("[Count C]");
+    clock_t t;
+    t = clock();
+
+    unsigned long i;
+    for (i=1; i < 4294967296; i++) {
+    }
+
+    t = clock() - t;
+    double clockTimeThreadC = ((double)t)/ CLOCKS_PER_SEC;
+    printf("[!] Thread C - Clock time: %lf s\n", clockTimeThreadC);
+
     return NULL;
 }
 
@@ -62,7 +72,6 @@ int main() {
 
 
     // THREAD B
-
     pthread_t threadB;
 
     struct sched_param threadB_schedParam;
@@ -72,6 +81,14 @@ int main() {
     pthread_join(threadB, NULL);
 
 
+    // THREAD C
+    pthread_t threadC;
+
+    struct sched_param threadC_schedParam;
+    pthread_setschedparam(threadC, SCHED_FIFO, &threadC_schedParam);
+
+	pthread_create(&threadC, NULL, countC , NULL);
+    pthread_join(threadC, NULL);
 
 
 
