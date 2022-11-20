@@ -5,7 +5,6 @@
 #include <math.h>
 #include <sched.h>
 #include <time.h>
-#include <sys/resource.h>
 
 #define NANOS_PER_SEC 1000000000L
 
@@ -75,6 +74,7 @@ int main() {
     pthread_t threadB;
 
     struct sched_param threadB_schedParam;
+    threadB_schedParam.sched_priority = 0;
     pthread_setschedparam(threadB, SCHED_RR, &threadB_schedParam);
 
 	pthread_create(&threadB, NULL, countB , NULL);
@@ -85,6 +85,7 @@ int main() {
     pthread_t threadC;
 
     struct sched_param threadC_schedParam;
+    threadC_schedParam.sched_priority = 0;
     pthread_setschedparam(threadC, SCHED_FIFO, &threadC_schedParam);
 
 	pthread_create(&threadC, NULL, countC , NULL);
