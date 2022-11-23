@@ -37,31 +37,55 @@ void* countA(void* vargptr) {
 }
 
 void* countB(void* vargptr) {
-    clock_t t;
-    t = clock();
+    struct timespec clockStartTime;
+    double measure;
 
-    unsigned long i;
-    for (i=1; i < 4294967296; i++) {
-    }
+    unsigned long long int i;
+    int didClockStart = clock_gettime(CLOCK_REALTIME, &clockStartTime);
+    if (didClockStart == -1) {
+        printf("Error in clock_gettime() at start of count fn.");
+        exit(1);
+    };
 
-    t = clock() - t;
-    double clockTimeThreadB = ((double)t)/ CLOCKS_PER_SEC;
-    printf("[!] Thread B - Clock time: %lf s\n", clockTimeThreadB);
+    for (i=1; i < 4294967296; i++) {};
+
+    struct timespec clockStopTime;
+    int didClockStop = clock_gettime(CLOCK_REALTIME, &clockStopTime);
+    if (didClockStop == -1) {
+        printf("Error in clock_gettime() at end of count fn.");
+        exit(1);
+    };
+
+    measure = ( clockStopTime.tv_sec - clockStartTime.tv_sec ) + (float)( clockStopTime.tv_nsec - clockStartTime.tv_nsec ) / NANOS_PER_SEC;
+
+    printf("[!] Thread B -> Clock time: %lf s\n", measure);
 
     return NULL;
 }
 
 void* countC(void* vargptr) {
-    clock_t t;
-    t = clock();
+    struct timespec clockStartTime;
+    double measure;
 
-    unsigned long i;
-    for (i=1; i < 4294967296; i++) {
-    }
+    unsigned long long int i;
+    int didClockStart = clock_gettime(CLOCK_REALTIME, &clockStartTime);
+    if (didClockStart == -1) {
+        printf("Error in clock_gettime() at start of count fn.");
+        exit(1);
+    };
 
-    t = clock() - t;
-    double clockTimeThreadC = ((double)t)/ CLOCKS_PER_SEC;
-    printf("[!] Thread C - Clock time: %lf s\n", clockTimeThreadC);
+    for (i=1; i < 4294967296; i++) {};
+
+    struct timespec clockStopTime;
+    int didClockStop = clock_gettime(CLOCK_REALTIME, &clockStopTime);
+    if (didClockStop == -1) {
+        printf("Error in clock_gettime() at end of count fn.");
+        exit(1);
+    };
+
+    measure = ( clockStopTime.tv_sec - clockStartTime.tv_sec ) + (float)( clockStopTime.tv_nsec - clockStartTime.tv_nsec ) / NANOS_PER_SEC;
+
+    printf("[!] Thread C -> Clock time: %lf s\n", measure);
 
     return NULL;
 }
@@ -75,12 +99,11 @@ int main() {
     pthread_t threadA;
 
     struct sched_param threadA_schedParam;
-    threadA_schedParam.sched_priority = 0;
+    //threadA_schedParam.sched_priority = 0;
     pthread_setschedparam(threadA, SCHED_OTHER, &threadA_schedParam);
 
-	pthread_create(&threadA, NULL, countA , NULL);
 
-    /*
+    
     // THREAD B
     pthread_t threadB;
 
@@ -88,7 +111,6 @@ int main() {
     threadB_schedParam.sched_priority = 0;
     pthread_setschedparam(threadB, SCHED_RR, &threadB_schedParam);
 
-	pthread_create(&threadB, NULL, countB , NULL);
 
 
     // THREAD C
@@ -98,13 +120,17 @@ int main() {
     threadC_schedParam.sched_priority = 0;
     pthread_setschedparam(threadC, SCHED_FIFO, &threadC_schedParam);
 
-	pthread_create(&threadC, NULL, countC , NULL);
-    
-    */
+
+    // Create the threads
+
+	pthread_create(&threadA, NULL, countA , NULL);
+	pthread_create(&threadB, NULL, countB , NULL);
+	pthread_create(&threadC, NULL, countC , NULL);    
+
 
     pthread_join(threadA, NULL);
-    //pthread_join(threadB, NULL);
-    //pthread_join(threadC, NULL);
+    pthread_join(threadB, NULL);
+    pthread_join(threadC, NULL);
 
     
 
