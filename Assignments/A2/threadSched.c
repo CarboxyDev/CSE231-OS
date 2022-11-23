@@ -95,42 +95,56 @@ void* countC(void* vargptr) {
 int main() {
     printf("[!] Start program\n");
 
-    // THREAD A    
-    pthread_t threadA;
+    int incFactor = 0;
 
-    struct sched_param threadA_schedParam;
-    //threadA_schedParam.sched_priority = 0;
-    pthread_setschedparam(threadA, SCHED_OTHER, &threadA_schedParam);
+    int SCHED_RR_minPriority = sched_get_priority_min(SCHED_RR);
+    int SCHED_RR_maxPriority = sched_get_priority_max(SCHED_RR);
+    int SCHED_FIFO_minPriority = sched_get_priority_min(SCHED_FIFO);
+    int SCHED_FIFO_maxPriority = sched_get_priority_max(SCHED_FIFO);
 
+    int threadB_priority = (SCHED_RR_maxPriority - SCHED_RR_minPriority) / 2;
+    int threadC_priority = (SCHED_FIFO_maxPriority - SCHED_FIFO_minPriority) / 2;
 
-    
-    // THREAD B
-    pthread_t threadB;
+    for (int i = 0; i < 10; i++) {
+        
+        printf("[ITERATION %d]\n", i + 1);
+        // THREAD A    
+        pthread_t threadA;
 
-    struct sched_param threadB_schedParam;
-    threadB_schedParam.sched_priority = 0;
-    pthread_setschedparam(threadB, SCHED_RR, &threadB_schedParam);
-
-
-
-    // THREAD C
-    pthread_t threadC;
-
-    struct sched_param threadC_schedParam;
-    threadC_schedParam.sched_priority = 0;
-    pthread_setschedparam(threadC, SCHED_FIFO, &threadC_schedParam);
+        struct sched_param threadA_schedParam;
+        threadA_schedParam.sched_priority = 0;
+        pthread_setschedparam(threadA, SCHED_OTHER, &threadA_schedParam);
 
 
-    // Create the threads
+        // THREAD B
+        pthread_t threadB;
 
-	pthread_create(&threadA, NULL, countA , NULL);
-	pthread_create(&threadB, NULL, countB , NULL);
-	pthread_create(&threadC, NULL, countC , NULL);    
+        struct sched_param threadB_schedParam;
+        threadB_schedParam.sched_priority = threadB_priority + incFactor;
+        pthread_setschedparam(threadB, SCHED_RR, &threadB_schedParam);
 
 
-    pthread_join(threadA, NULL);
-    pthread_join(threadB, NULL);
-    pthread_join(threadC, NULL);
+        // THREAD C
+        pthread_t threadC;
+
+        struct sched_param threadC_schedParam;
+        threadC_schedParam.sched_priority = threadC_priority + incFactor;
+        pthread_setschedparam(threadC, SCHED_FIFO, &threadC_schedParam);
+
+
+        // Create the threads
+        pthread_create(&threadA, NULL, countA , NULL);
+        pthread_create(&threadB, NULL, countB , NULL);
+        pthread_create(&threadC, NULL, countC , NULL);    
+
+        pthread_join(threadA, NULL);
+        pthread_join(threadB, NULL);
+        pthread_join(threadC, NULL);
+
+        incFactor += 2;
+        printf("-----------------------------------------\n\n");
+    }
+
 
     
 
