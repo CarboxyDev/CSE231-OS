@@ -43,6 +43,7 @@ void* countA(void* vargptr) {
 }
 
 void* countB(void* vargptr) {
+
     struct timespec clockStartTime;
     double measure;
 
@@ -116,6 +117,7 @@ int main() {
         printf("Error in file handling. Please try again.\n");
         exit(1);
     }*/
+    
 
     for (int i = 0; i < 10; i++) {
         
@@ -137,11 +139,18 @@ int main() {
         pthread_attr_t attrB;
         struct sched_param threadB_param;
         threadB_param.sched_priority = SCHED_RR_minPriority + i * threadB_priorityBreak;
+
         if (pthread_attr_init(&attrB) != 0) {
             printf("Error in initializing thread B.\n");
         }
-        pthread_attr_setschedpolicy(&attrB, SCHED_RR);
-        pthread_attr_setschedparam(&attrB, &threadB_param);
+        if (pthread_attr_setschedpolicy(&attrB, SCHED_RR) != 0) {
+            printf("Error in setting sched policy thread B\n");
+        }
+        if (pthread_attr_setschedparam(&attrB, &threadB_param) != 0) {
+            printf("Error in setting sched param thread B\n");
+        }
+
+        
 
 
         // THREAD C
@@ -163,14 +172,18 @@ int main() {
 
 
         // Create the threads
-        pthread_create(&threadA, NULL, countA , NULL);
-        pthread_create(&threadB, NULL, countB , NULL);
-        pthread_create(&threadC, NULL, countC , NULL); 
+        pthread_create(&threadA, &attrA, countA , NULL);
+        pthread_create(&threadB, &attrB, countB , NULL);
+        pthread_create(&threadC, &attrC, countC , NULL); 
 
+        //int bp = pthread_attr_getschedparam(&attrB, &threadB_param);
+        //printf("B priority -> %d\n", bp);
 
         pthread_join(threadA, NULL);
         pthread_join(threadB, NULL);
         pthread_join(threadC, NULL);
+
+
 
         pthread_attr_destroy(&attrA);
         pthread_attr_destroy(&attrB);
