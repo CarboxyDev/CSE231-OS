@@ -20,9 +20,10 @@ int main() {
     /* 
     syscall format:
         syscall(<syscall number>, <amount of elements to copy>, <source mem>, <destination mem>);
+        kernel_2d_memcpy takes in order -> number of elements, source memory, destination memory
     */
 
-   int syscallNumber = 548;
+   int syscallNumber = 451;
    int elemsCopyCount = 3 * 3; // amount of elements to copy -> number of elements in the matrix to copy
    printf("Using a syscall with number ", syscall(syscallNumber, elemsCopyCount, matrix, memDest));
 
