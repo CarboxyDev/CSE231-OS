@@ -53,14 +53,14 @@ int main()
             printf("[ERROR] Cannot write to FIFO.\n");
         }
         else { // writing the message in FIFO
-            snprintf(writeBuffer, 100, "%d.%s\n%d.%s\n%d.%s\n%d.%s\n%d.%s\n", writeIndex, *(arrayOfStrings + writeIndex),
+            snprintf(writeBuffer, 100, "%d -> %s\n%d -> %s\n%d -> %s\n%d -> %s\n%d -> %s\n", writeIndex, *(arrayOfStrings + writeIndex),
                 writeIndex + 2, *(arrayOfStrings + writeIndex + 2), writeIndex + 1, *(arrayOfStrings + writeIndex + 1),
                 writeIndex + 3, *(arrayOfStrings + writeIndex + 3), writeIndex + 4, *(arrayOfStrings + writeIndex + 4));
             
             
             printf("I sent:\n%s", writeBuffer);
             wval = write(f, writeBuffer, sizeof(writeBuffer));
-            //printf("[MESSAGE] Write");
+            printf("[STATUS] Message has been written\n");
 
             close(f);
             f = open("/tmp/fifo", O_RDONLY);
@@ -69,10 +69,9 @@ int main()
             }
 
             read(f, readBuffer, 1000);
-            //readToBuf(f, readBuffer, 1000);
             close(f);
 
-            printf("Received Data: %s, interpreted as: %d\n", readBuffer, atoi(readBuffer));
+            printf("Received Data: %s\n", readBuffer);
             if (atoi(readBuffer) == writeIndex + 4) {
                 writeIndex += 5;
             }
@@ -86,7 +85,7 @@ int main()
         }
     };
 
-    printf("[END] P1.\n");
+    printf("[END] P1\n");
     unlink("/tmp/fifo"); // destroy the FIFO
     return 0;
 }

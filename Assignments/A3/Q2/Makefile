@@ -1,22 +1,16 @@
 CC=gcc
 
-P1fifo: P1fifo.c
-	@$(CC) P1fifo.c -o P1fifo
+all: fifo sockets shm
+
+fifo: P1-fifo.o P2-fifo.o
+#sockets: P1-sockets.o P2-sockets.o
+#shm: P1-shm.o P2-shm.o
+
+P1-fifo.o: P1-fifo.c
+	$(CC) -o P1-fifo P1-fifo.c
 	
-P2fifo: P2fifo.c
-	@$(CC) P2fifo.c -o P2fifo
-	
-P1soc: P1soc.c
-	@$(CC) P1soc.c -o P1soc
-	
-P2soc: P2soc.c
-	@$(CC) P2soc.c -o P2soc
-	
-P1mq: P1mq.c
-	@$(CC) P1mq.c -o P1mq -lrt
-	
-P2mq: P2mq.c
-	@$(CC) P2mq.c -o P2mq -lrt
+P2-fifo.o: P2-fifo.c
+	$(CC) -o P2-fifo P2-fifo.c
 
 clean:
-	@rm -f P1fifo P2fifo P1soc P2soc P1mq P2mq
+	rm -rf P1-fifo P2-fifo
