@@ -3,64 +3,51 @@
 #include <unistd.h>
 #include <string.h>
 #include <sys/fcntl.h>
-#include <sys/types.h>
-#include <sys/un.h>
+
+#define CHAR_COUNT 8
+#define BUFFER_SIZE 1000
+#define ITER_COUNT 10
 
 /**
  * This is P2 using FIFO IPC mechanism.
  */
 
-void readToBuf(int msgsock, char *readbuf, int sz)
-{
-    int rval;
-    //Read in socket will always reset lseek
-    if (read(msgsock, readbuf, sz) < 0)
-        perror("Oh no, read system call, it's broken\n");
-}
-
-
 int main() {
-    int sock, wval, fd;
-    int iterator = 10;
+    int iterator = ITER_COUNT;
     char readBuffer[1000];
     char writeBuffer[1000];
 
     memset(readBuffer, 0, 1000);
     memset(writeBuffer, 0, 1000);
 
-
-    int maxind = -1;
-    int prev_maxind = -1;
-
-
     printf("[READY] P2\n");
+    int f;
+    int writeMsg;
+    int IndexLimitMax = -1;
+    int IndexLimitMax_prev = -1;
     while (iterator) {
-        if ((fd = open("/tmp/fifo", O_RDONLY)) < 0)
-        {
-            perror("Do not run p2 first");
-        }
-        readToBuf(fd, readBuffer, 1000);
+        f = open("/tmp/fifo", O_RDONLY);
+        
+        read(f, readBuffer, BUFFER_SIZE);
+        printf("[INFO] Data received from P1:\n%s", readBuffer);
 
-        printf("I received:\n%s", readBuffer);
-
-        sscanf(readBuffer, "%d%*s", &maxind);
-        if (prev_maxind != maxind)
-        {
-            --iterator;
-            prev_maxind = maxind;
+        sscanf(readBuffer, "%d%*s", &IndexLimitMax);
+        if (IndexLimitMax_prev != IndexLimitMax) {
+            IndexLimitMax_prev = IndexLimitMax;
+            iterator -= 1;
         }
 
-        close(fd);
-        if ((fd = open("/tmp/fifo", O_WRONLY)) < 0)
-            perror("fifo not writable\n");
+        close(f);
+        int newIndexLimitMax = IndexLimitMax + 4;
 
-        snprintf(writeBuffer, 8, "%d", maxind + 4);
-        printf("send val = %s\n", writeBuffer);
-        if ((wval = write(fd, writeBuffer, 1000)) < 0)
-            perror("writing on stream socket\n");
-        close(fd);
+        f = open("/tmp/fifo", O_WRONLY);
+        snprintf(writeBuffer, CHAR_COUNT, "%d", newIndexLimitMax);
+        printf("[STATUS] Message has been sent\n");
+        printf("Message sent: %s\n", writeBuffer);
+        writeMsg = write(f, writeBuffer, BUFFER_SIZE);
+        close(f);
     }
 
-    printf("TERMINATING P2, TASK COMPLETED.\n");
-    close(fd);
+    printf("[END] P2\n");
+    close(f);
 }
