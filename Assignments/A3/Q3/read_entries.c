@@ -2,6 +2,9 @@
 #include <linux/syscalls.h>
 #include <linux/pid.h>
 #include <linux/sched.h>
+#include <linux/module.h>
+
+
 
 SYSCALL_DEFINE1(read_entries, pid_t, procid) {
     struct task_struct *data = find_task_by_pid(procid);
@@ -22,5 +25,28 @@ SYSCALL_DEFINE1(read_entries, pid_t, procid) {
 
     return 0; // in syscalls, 0 indicates successfull execution of the syscall
 
+}
+
+
+static int __init read_entries_init(void) {
+    int ret = syscall_regfunc(__NR_read_entries, (void *)sys_read_entries); // this registers the syscall
+    if (ret != 0) {
+        printk("Unable to register the syscall.\n");
+        return ret;
+    }
+
+    printk("Syscall successfully registered.\n");
+    return 0;
+    
+
+   printk("Syscall registered\n");
 
 }
+
+static void __exit read_entries_exit(void) {
+    syscall_unregfunc(__NR_read_entries); // this unregisters the syscall so it can't be called when the module ain't loaded
+    printk("Syscall successfully unregistered.\n");
+}
+
+module_init(read_entries_init);
+module_exit(read_entries_exit);
