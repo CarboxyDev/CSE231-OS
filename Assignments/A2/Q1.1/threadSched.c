@@ -8,13 +8,6 @@
 
 #define NANOS_PER_SEC 1000000000L
 
-static double showClock(struct timespec clockStartTime, struct timespec clockStopTime) {
-    double measure = ( clockStopTime.tv_sec - clockStartTime.tv_sec ) + (float)( clockStopTime.tv_nsec - clockStartTime.tv_nsec ) / NANOS_PER_SEC;
-    return measure;
-
-}
-
-
 void* countA(void* vargptr) {
     struct timespec clockStartTime;
     double measure;
@@ -127,9 +120,11 @@ int main() {
         pthread_attr_t attrA;
         struct sched_param threadA_param;
         threadA_param.sched_priority = 0;
+        
         if (pthread_attr_init(&attrA) != 0) {
             printf("Error in initializing thread A.\n");
-        }
+        };
+        pthread_attr_setinheritsched(&attrA, PTHREAD_EXPLICIT_SCHED); // where attr is the attr of thread
         pthread_attr_setschedpolicy(&attrA, SCHED_OTHER);
         pthread_attr_setschedparam(&attrA, &threadA_param);
 
@@ -142,15 +137,14 @@ int main() {
 
         if (pthread_attr_init(&attrB) != 0) {
             printf("Error in initializing thread B.\n");
-        }
+        };
+        pthread_attr_setinheritsched(&attrB, PTHREAD_EXPLICIT_SCHED); // where attr is the attr of thread
         if (pthread_attr_setschedpolicy(&attrB, SCHED_RR) != 0) {
             printf("Error in setting sched policy thread B\n");
         }
         if (pthread_attr_setschedparam(&attrB, &threadB_param) != 0) {
             printf("Error in setting sched param thread B\n");
         }
-
-        
 
 
         // THREAD C
@@ -161,14 +155,13 @@ int main() {
         threadC_param.sched_priority = SCHED_FIFO_minPriority + i * threadC_priorityBreak;
         if (pthread_attr_init(&attrC) != 0) {
             printf("Error in initializing thread C.\n");
-        }
+        };
+
+        pthread_attr_setinheritsched(&attrC, PTHREAD_EXPLICIT_SCHED); // where attr is the attr of thread  
         pthread_attr_setschedpolicy(&attrC, SCHED_FIFO);
         pthread_attr_setschedparam(&attrC, &threadC_param);
 
         // in testing, A -> slowest, B & C -> similar time 
-        pthread_attr_setinheritsched(&attrA, PTHREAD_EXPLICIT_SCHED); // where attr is the attr of thread
-        pthread_attr_setinheritsched(&attrB, PTHREAD_EXPLICIT_SCHED); // where attr is the attr of thread
-        pthread_attr_setinheritsched(&attrC, PTHREAD_EXPLICIT_SCHED); // where attr is the attr of thread  
 
 
         // Create the threads
@@ -176,8 +169,7 @@ int main() {
         pthread_create(&threadB, &attrB, countB , NULL);
         pthread_create(&threadC, &attrC, countC , NULL); 
 
-        //int bp = pthread_attr_getschedparam(&attrB, &threadB_param);
-        //printf("B priority -> %d\n", bp);
+
 
         pthread_join(threadA, NULL);
         pthread_join(threadB, NULL);

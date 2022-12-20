@@ -1,0 +1,39 @@
+375,376c375
+< 451	common  kernel_2d_memcpy	sys_kernel_2d_memcpy
+---
+> 
+Only in ./.helios/linux-6.0.9/kernel_2d_memcpy/: .built-in.a.cmd
+Only in ./.helios/linux-6.0.9/kernel_2d_memcpy/: .kernel_2d_memcpy.o.cmd
+Only in ./.helios/linux-6.0.9/kernel_2d_memcpy/: .modules.order.cmd
+diff ./.helios/linux-6.0.9/kernel_2d_memcpy/Makefile ./.arman/linux-6.0.9/kernel_2d_memcpy/Makefile
+1d0
+< obj-y := kernel_2d_memcpy.o
+Only in ./.helios/linux-6.0.9/kernel_2d_memcpy/: built-in.a
+diff ./.helios/linux-6.0.9/kernel_2d_memcpy/kernel_2d_memcpy.c ./.arman/linux-6.0.9/kernel_2d_memcpy/kernel_2d_memcpy.c
+1,19d0
+<#include <linux/kernel.h>
+<#include <linux/syscalls.h>
+<
+<
+<SYSCALL_DEFINE3(kernel_2d_memcpy, unsigned long int, elemCount, long*, source, long*, dest) {
+<
+<    long memHold[1]; // holds some temporary memory for every iteration of copying
+<    int memChunkSize = 8;
+<    long* destPtrAlt = dest; // need to create to act like a pseudo-dest variable in copytouser
+<    for (unsigned long long int i=0; i < elemCount; i++) {
+<        if (__copy_from_user(memHold, source++ , memChunkSize) != 0) {
+<            return -EFAULT;
+<        }
+<        if (__copy_to_user(destPtrAlt++, memHold, memChunkSize) != 0) {
+<            return -EFAULT;
+<        }
+<    }
+<    // runs on fully successful copying of data
+<     return (long) dest;
+< }
+Only in ./.helios/linux-6.0.9/kernel_2d_memcpy/: kernel_2d_memcpy.o
+Only in ./.helios/linux-6.0.9/kernel_2d_memcpy/: modules.order
+1104c1104
+< core-y			+= kernel/ certs/ mm/ fs/ ipc/ security/ crypto/ kernel_2d_memcpy/
+---
+> core-y			+= kernel/ certs/ mm/ fs/ ipc/ security/ crypto/
