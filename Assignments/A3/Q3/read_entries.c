@@ -30,11 +30,12 @@ SYSCALL_DEFINE1(read_entries, pid_t, procid) {
 
 static int __init read_entries_init(void) {
     printk("Module read_entries initialized.");
+    /*
     int ret = sys_create_call(read_entries, __NR_read_entries);
     if (ret < 0) {
         printk("Unable to register the syscall.\n");
         return ret;
-    }
+    }*/
 
     printk("Syscall successfully registered.\n");
     return 0;
@@ -42,7 +43,7 @@ static int __init read_entries_init(void) {
 
 static void __exit read_entries_exit(void) {
     printk("Module read_entries uninitialized.");
-    sys_delete_call(__NR_read_entries);
+    /*sys_delete_call(__NR_read_entries);*/
     printk("Syscall successfully unregistered.\n");
 }
 
