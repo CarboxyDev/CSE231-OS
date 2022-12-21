@@ -14,11 +14,11 @@
 
 int main() {
     int iterator = ITER_COUNT;
-    char readBuffer[1000];
-    char writeBuffer[1000];
+    char readBuffer[BUFFER_SIZE];
+    char writeBuffer[BUFFER_SIZE];
 
-    memset(readBuffer, 0, 1000);
-    memset(writeBuffer, 0, 1000);
+    memset(readBuffer, 0, BUFFER_SIZE);
+    memset(writeBuffer, 0, BUFFER_SIZE);
 
     printf("[READY] P2\n");
     int f;

@@ -15,6 +15,9 @@ Some important C functions and structs used for IPC functionality are:
     bind()
     listen()
     accept()
+    shmget()
+    shmat()
+    shmdt()
 
 ### Explanation
 The FIFO-based programs exchange data with each other using named FIFO (first in first out) pipes. They need to have write and read priviledges to stream their data.

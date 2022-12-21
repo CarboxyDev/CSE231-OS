@@ -5,14 +5,15 @@
 #include <sys/stat.h>
 #include <sys/fcntl.h>
 #include <sys/shm.h>
+#include <sys/ipc.h>
 #include <time.h>
 
 #define STR_LEN 8
 #define STR_COUNT 50
 #define ASCII_START 97
-#define BUFFER_SIZE 1000
+#define BUFFER_SIZE 1024
 #define LINUX_CODE 06666
-#define SHM_KEY 9999
+#define SHM_KEY 0x1234
 
 /**
  * This is P1 using Shared Memory (shm) IPC mechanism.
@@ -42,31 +43,60 @@ void startShm() {
     memset(readBuffer, 0, BUFFER_SIZE);
     memset(writeBuffer, 0, BUFFER_SIZE);
 
-    int shmid = shmget(SHM_KEY, BUFFER_SIZE, 0666 | IPC_CREAT);
+    int shmid = shmget(SHM_KEY, BUFFER_SIZE, IPC_CREAT | 0666 );
 
     if (shmid < 0) {
         printf("[ERROR] Could not create Shared Memory segment\n");
         return;
     }
-    
+
+    printf("Key: %d\n", shmid);
+
     void* sharedMem = shmat(shmid, NULL, 0);
-    if (sharedMem == (void*)-1) {
+    if (sharedMem == (void*) - 1) {
         printf("[ERROR] Could not attach to shared memory\n");
         return;
     }
 
-    printf("[READY] P1 using shm\n");
-    
+    printf("Process attached at address: %p\n", sharedMem);
+
+    printf("[READY] P1 using shm\n");    
     int f;
     int writeMsg;
     int writeIndex;
     writeIndex = 0;
+
+    int idx = 0;
+    while (idx < 50) {
+        snprintf((char*) sharedMem, BUFFER_SIZE, "%d -> %s \n%d -> %s \n%d -> %s \n%d -> %s \n%d -> %s\n", idx, arrayOfStrings[idx], idx+1, arrayOfStrings[idx+1], idx+2, arrayOfStrings[idx+2], idx+3, arrayOfStrings[idx+3], idx+4, arrayOfStrings[idx+4]);
+
+        printf("[INFO] Data sent by P1:\n%s", sharedMem);
+
+        int ackw = 0;
+        while (ackw < (idx + 1)) {
+            sscanf((char*) sharedMem, "%d", &ackw);
+            sleep(1);
+        };
+        
+        printf("Received Data from P2: %s\n", sharedMem);
+
+        idx += 5;
+
+    }
+
+    shmdt(sharedMem);
+
 
 
 }
 
 
 int main() {
+    clock_t start = clock();
     startShm();
+    clock_t end = clock();
+    double timeTaken = (double)(end - start) / CLOCKS_PER_SEC;
+    printf("Time taken by SHM: %f seconds\n", timeTaken);
+
     return 0;
 }

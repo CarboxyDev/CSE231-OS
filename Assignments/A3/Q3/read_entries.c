@@ -29,22 +29,20 @@ SYSCALL_DEFINE1(read_entries, pid_t, procid) {
 
 
 static int __init read_entries_init(void) {
-    int ret = syscall_regfunc(__NR_read_entries, (void *)sys_read_entries); // this registers the syscall
-    if (ret != 0) {
+    printk("Module read_entries initialized.");
+    int ret = sys_create_call(read_entries, __NR_read_entries);
+    if (ret < 0) {
         printk("Unable to register the syscall.\n");
         return ret;
     }
 
     printk("Syscall successfully registered.\n");
     return 0;
-    
-
-   printk("Syscall registered\n");
-
 }
 
 static void __exit read_entries_exit(void) {
-    syscall_unregfunc(__NR_read_entries); // this unregisters the syscall so it can't be called when the module ain't loaded
+    printk("Module read_entries uninitialized.");
+    sys_delete_call(__NR_read_entries);
     printk("Syscall successfully unregistered.\n");
 }
 
